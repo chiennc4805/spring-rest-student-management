@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -64,6 +65,16 @@ public class StudentController {
         Student updatedStudent = this.studentService.updateStudent(reqStudent);
 
         return ResponseEntity.ok(updatedStudent);
+    }
+
+    @DeleteMapping("/students/{id}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable("id") String id) throws IdInvalidException {
+        Student studentDB = this.studentService.fetchStudentById(id);
+        if (studentDB == null) {
+            throw new IdInvalidException("Student with id = " + id + " không tồn tại");
+        }
+        this.studentService.deleteStudent(id);
+        return ResponseEntity.ok(null);
     }
 
 }
