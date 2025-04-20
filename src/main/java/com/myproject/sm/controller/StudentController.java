@@ -4,11 +4,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.sm.config.error.IdInvalidException;
 import com.myproject.sm.domain.Student;
+import com.myproject.sm.domain.response.ResultPaginationDTO;
 import com.myproject.sm.service.StudentService;
+import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
 
 import java.util.List;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,10 +39,11 @@ public class StudentController {
     }
 
     @GetMapping("/students")
-    public ResponseEntity<List<Student>> fetchAllStudents() {
-        List<Student> students = this.studentService.fetchAllStudents();
+    public ResponseEntity<ResultPaginationDTO> fetchAllStudents(
+            @Filter Specification<Student> spec,
+            Pageable pageable) {
 
-        return ResponseEntity.ok(students);
+        return ResponseEntity.ok(this.studentService.fetchAllStudents(spec, pageable));
     }
 
     @GetMapping("/students/{id}")

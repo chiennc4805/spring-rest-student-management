@@ -3,9 +3,14 @@ package com.myproject.sm.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.myproject.sm.domain.Student;
+import com.myproject.sm.domain.response.ResultPaginationDTO;
+import com.myproject.sm.domain.response.ResultPaginationDTO.Meta;
 import com.myproject.sm.repository.StudentRepository;
 
 @Service
@@ -21,8 +26,20 @@ public class StudentService {
         return this.studentRepository.save(student);
     }
 
-    public List<Student> fetchAllStudents() {
-        return this.studentRepository.findAll();
+    public ResultPaginationDTO fetchAllStudents(Specification<Student> spec, Pageable pageable) {
+        Page<Student> pageStudent = this.studentRepository.findAll(spec, pageable);
+        ResultPaginationDTO res = new ResultPaginationDTO();
+        Meta mt = new ResultPaginationDTO.Meta();
+
+        mt.setPage(pageStudent.getNumber() + 1);
+        mt.setPageSize(pageStudent.getSize());
+        mt.setPages(pageStudent.getTotalPages());
+        mt.setTotal(pageStudent.getTotalElements());
+
+        res.setMeta(mt);
+        res.setResult(pageStudent.getContent());
+
+        return res;
     }
 
     public Student fetchStudentById(String id) {
