@@ -1,5 +1,54 @@
-package com.myproject.sm.domain;
+// package com.myproject.sm.domain;
 
-public class User {
+// import java.util.UUID;
 
-}
+// import org.hibernate.annotations.GenericGenerator;
+// import org.hibernate.annotations.UuidGenerator;
+
+// import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+// import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+
+// import jakarta.persistence.Column;
+// import jakarta.persistence.Entity;
+// import jakarta.persistence.FetchType;
+// import jakarta.persistence.GeneratedValue;
+// import jakarta.persistence.GenerationType;
+// import jakarta.persistence.Id;
+// import jakarta.persistence.JoinColumn;
+// import jakarta.persistence.ManyToOne;
+// import jakarta.persistence.OneToMany;
+// import jakarta.persistence.PrePersist;
+// import jakarta.persistence.Table;
+// import jakarta.validation.constraints.NotBlank;
+// import lombok.Getter;
+// import lombok.Setter;
+
+// @Getter
+// @Setter
+// @Entity
+// @Table(name = "users")
+// public class User {
+
+// @Id
+// @Column(name = "id", columnDefinition = "uniqueidentifier")
+// private String id;
+
+// @NotBlank(message = "username không được để trống")
+// private String username;
+
+// @NotBlank(message = "password không được để trống")
+// private String password;
+
+// @ManyToOne(fetch = FetchType.LAZY)
+// @JoinColumn(name = "role_id")
+// @JsonIgnoreProperties("users")
+// private Role role;
+
+// @PrePersist
+// public void autoGenerateId() {
+// if (this.id == null) {
+// this.id = UUID.randomUUID().toString();
+// }
+// }
+
+// }
