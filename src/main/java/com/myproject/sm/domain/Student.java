@@ -7,6 +7,7 @@ import org.hibernate.annotations.ManyToAny;
 import org.hibernate.annotations.UuidGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -25,6 +26,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "students")
 public class Student {
+
     @Id
     @UuidGenerator
     private String id;
@@ -38,9 +40,8 @@ public class Student {
     // @NotNull(message = "BirthDate không được để trống")
     private LocalDate birthDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "parent_id")
-    @JsonIgnore
     private Parent parent;
 
 }

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.myproject.sm.domain.Parent;
 import com.myproject.sm.domain.Student;
 import com.myproject.sm.domain.response.ResultPaginationDTO;
 import com.myproject.sm.domain.response.ResultPaginationDTO.Meta;
@@ -17,12 +18,18 @@ import com.myproject.sm.repository.StudentRepository;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final ParentService parentService;
 
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository, ParentService parentService) {
         this.studentRepository = studentRepository;
+        this.parentService = parentService;
     }
 
     public Student handleCreateStudent(Student student) {
+        if (student.getParent() != null) {
+            Parent parent = this.parentService.fetchParentById(student.getParent().getId());
+            student.setParent(parent != null ? parent : null);
+        }
         return this.studentRepository.save(student);
     }
 
@@ -59,6 +66,10 @@ public class StudentService {
         }
         if (reqStudent.getBirthDate() != null) {
             studentDB.setBirthDate(reqStudent.getBirthDate());
+        }
+        if (reqStudent.getParent() != null) {
+            Parent parent = this.parentService.fetchParentById(reqStudent.getParent().getId());
+            studentDB.setParent(parent != null ? parent : null);
         }
         return this.studentRepository.save(studentDB);
     }
