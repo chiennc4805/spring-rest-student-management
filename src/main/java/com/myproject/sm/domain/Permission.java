@@ -1,42 +1,48 @@
-// package com.myproject.sm.domain;
+package com.myproject.sm.domain;
 
-// import java.util.UUID;
+import java.util.List;
+import java.util.UUID;
 
-// import org.hibernate.annotations.ManyToAny;
+import org.hibernate.annotations.ManyToAny;
+import org.hibernate.annotations.UuidGenerator;
 
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.FetchType;
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import jakarta.persistence.Id;
-// import jakarta.persistence.Table;
-// import jakarta.validation.constraints.NotBlank;
-// import lombok.Getter;
-// import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-// @Getter
-// @Setter
-// @Entity
-// @Table(name = "permissions")
-// public class Permission {
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
-// @Id
-// @GeneratedValue(strategy = GenerationType.UUID)
-// private UUID id;
+@Getter
+@Setter
+@Entity
+@Table(name = "permissions")
+public class Permission {
 
-// @NotBlank(message = "Name không được để trống")
-// private String name;
+    @Id
+    @UuidGenerator
+    private String id;
 
-// @NotBlank(message = "ApiPath không được để trống")
-// private String apiPath;
+    @NotBlank(message = "Name không được để trống")
+    private String name;
 
-// @NotBlank(message = "Method không được để trống")
-// private String method;
+    @NotBlank(message = "ApiPath không được để trống")
+    private String apiPath;
 
-// @NotBlank(message = "Module không được để trống")
-// private String module;
+    @NotBlank(message = "Method không được để trống")
+    private String method;
 
-// // @ManyToAny(fetch = FetchType.LAZY)
-// // private Role role;
+    @NotBlank(message = "Module không được để trống")
+    private String module;
 
-// }
+    @ManyToMany(mappedBy = "permissions")
+    @JsonIgnore
+    private List<Role> roles;
+
+}

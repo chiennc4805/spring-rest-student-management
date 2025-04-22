@@ -1,39 +1,53 @@
-// package com.myproject.sm.domain;
+package com.myproject.sm.domain;
 
-// import java.util.List;
-// import java.util.UUID;
+import java.util.List;
+import java.util.UUID;
 
-// import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.UuidGenerator;
 
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.FetchType;
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import jakarta.persistence.Id;
-// import jakarta.persistence.ManyToOne;
-// import jakarta.persistence.OneToMany;
-// import jakarta.persistence.Table;
-// import jakarta.validation.constraints.NotBlank;
-// import lombok.Getter;
-// import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-// @Getter
-// @Setter
-// @Entity
-// @Table(name = "roles")
-// public class Role {
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
-// @Id
-// @GeneratedValue(strategy = GenerationType.UUID)
-// private UUID id;
+@Getter
+@Setter
+@Entity
+@Table(name = "roles")
+public class Role {
 
-// @NotBlank(message = "Name không được để trống")
-// private String name;
+    @Id
+    @UuidGenerator
+    private String id;
 
-// @NotBlank(message = "Description không được để trống")
-// private String Description;
+    @NotBlank(message = "Name không được để trống")
+    private String name;
 
-// @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
-// @JsonIgnore
-// private List<User> users;
-// }
+    @NotBlank(message = "Description không được để trống")
+    private String Description;
+
+    private boolean active;
+
+    @OneToMany(mappedBy = "role")
+    @JsonIgnore
+    private List<User> users;
+
+    @ManyToMany
+    @JsonIgnoreProperties("roles")
+    @JoinTable(name = "permission_role", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    private List<Permission> permissions;
+
+}
