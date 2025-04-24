@@ -2,7 +2,6 @@ package com.myproject.sm.domain;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 import org.hibernate.annotations.UuidGenerator;
 
@@ -11,9 +10,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PreRemove;
@@ -40,7 +36,7 @@ public class Parent {
     private String facebookName;
 
     @OneToMany(mappedBy = "parent", orphanRemoval = true, cascade = { CascadeType.PERSIST })
-    @JsonIgnore
+    @JsonIgnoreProperties("parent")
     private List<Student> students;
 
     @PreRemove

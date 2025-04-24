@@ -8,7 +8,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.myproject.sm.domain.Role;
-import com.myproject.sm.domain.Student;
 import com.myproject.sm.domain.User;
 import com.myproject.sm.domain.response.ResultPaginationDTO;
 import com.myproject.sm.domain.response.ResultPaginationDTO.Meta;
@@ -69,5 +68,10 @@ public class UserService {
         res.setResult(pageUser.getContent());
 
         return res;
+    }
+
+    public User handleGetUserByUsername(String username) {
+        Optional<User> userOptional = this.userRepository.findByUsername(username);
+        return userOptional.isPresent() ? userOptional.get() : null;
     }
 }

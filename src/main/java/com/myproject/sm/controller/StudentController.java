@@ -2,10 +2,10 @@ package com.myproject.sm.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myproject.sm.config.error.IdInvalidException;
 import com.myproject.sm.domain.Student;
 import com.myproject.sm.domain.response.ResultPaginationDTO;
 import com.myproject.sm.service.StudentService;
+import com.myproject.sm.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;

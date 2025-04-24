@@ -32,11 +32,7 @@ public class User {
     @Id
     @UuidGenerator
     private String id;
-
-    @NotBlank(message = "username không được để trống")
     private String username;
-
-    @NotBlank(message = "password không được để trống")
     private String password;
 
     @ManyToOne()

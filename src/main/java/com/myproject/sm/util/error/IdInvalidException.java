@@ -1,4 +1,4 @@
-package com.myproject.sm.config.error;
+package com.myproject.sm.util.error;
 
 public class IdInvalidException extends Exception {
     // Constructor that accepts a message

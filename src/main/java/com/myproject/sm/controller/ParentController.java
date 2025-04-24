@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myproject.sm.config.error.IdInvalidException;
 import com.myproject.sm.domain.Parent;
 import com.myproject.sm.domain.Student;
 import com.myproject.sm.domain.response.ResultPaginationDTO;
 import com.myproject.sm.service.ParentService;
+import com.myproject.sm.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;

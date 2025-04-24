@@ -4,11 +4,13 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 import org.hibernate.annotations.ManyToAny;
+import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.UuidGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -32,6 +34,7 @@ public class Student {
     private String id;
 
     @NotBlank(message = "Name không được để trống")
+    @Nationalized
     private String name;
 
     // @NotBlank(message = "Gender không được để trống")
@@ -42,6 +45,7 @@ public class Student {
 
     @ManyToOne()
     @JoinColumn(name = "parent_id")
+    @JsonIgnoreProperties("students")
     private Parent parent;
 
 }
