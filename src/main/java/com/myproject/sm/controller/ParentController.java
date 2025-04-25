@@ -49,7 +49,7 @@ public class ParentController {
     public ResponseEntity<Parent> fetchStudentById(@PathVariable("id") String id) throws IdInvalidException {
         Parent student = this.parentService.fetchParentById(id);
         if (student == null) {
-            throw new IdInvalidException("Parent with id = " + id + " không tồn tại");
+            throw new IdInvalidException("Parent với id = " + id + " không tồn tại");
         }
         return ResponseEntity.ok(student);
     }
@@ -58,7 +58,7 @@ public class ParentController {
     public ResponseEntity<Parent> updateStudent(@RequestBody Parent reqParent) throws IdInvalidException {
         Parent parentDB = this.parentService.fetchParentById(reqParent.getId());
         if (parentDB == null) {
-            throw new IdInvalidException("Parent with id = " + reqParent.getId() + " không tồn tại");
+            throw new IdInvalidException("Parent với id = " + reqParent.getId() + " không tồn tại");
         }
         Parent updatedParent = this.parentService.updateParent(reqParent);
 
@@ -69,7 +69,7 @@ public class ParentController {
     public ResponseEntity<Void> deleteStudent(@PathVariable("id") String id) throws IdInvalidException {
         Parent parentDB = this.parentService.fetchParentById(id);
         if (parentDB == null) {
-            throw new IdInvalidException("Parent with id = " + id + " không tồn tại");
+            throw new IdInvalidException("Parent với id = " + id + " không tồn tại");
         }
         this.parentService.deleteParent(id);
         return ResponseEntity.ok(null);

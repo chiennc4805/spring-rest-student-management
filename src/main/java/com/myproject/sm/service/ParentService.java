@@ -51,15 +51,14 @@ public class ParentService {
     public Parent updateParent(Parent reqParent) {
         Parent parentDB = this.fetchParentById(reqParent.getId());
         // update Parent
-        if (reqParent.getName() != null) {
-            parentDB.setName(reqParent.getName());
-        }
-        if (reqParent.getGender() != null) {
-            parentDB.setGender(reqParent.getGender());
-        }
-        if (reqParent.getBirthDate() != null) {
-            parentDB.setBirthDate(reqParent.getBirthDate());
-        }
+        parentDB.setName(reqParent.getName());
+        parentDB.setGender(reqParent.getGender());
+        parentDB.setBirthDate(reqParent.getBirthDate());
+        parentDB.setAddress(reqParent.getAddress());
+        parentDB.setTelephone(reqParent.getTelephone());
+        parentDB.setFacebookName(reqParent.getFacebookName());
+        parentDB.setZaloName(reqParent.getZaloName());
+
         return this.parentRepository.save(parentDB);
     }
 

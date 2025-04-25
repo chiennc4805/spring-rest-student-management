@@ -52,8 +52,8 @@ public class GlobalException {
     public ResponseEntity<RestResponse<Object>> handleIdException(Exception ex) {
         RestResponse<Object> res = new RestResponse<>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
-        res.setError(ex.getMessage());
-        res.setMessage("Exception occur...");
+        res.setError("Exception occur...");
+        res.setMessage(ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
@@ -62,8 +62,11 @@ public class GlobalException {
     public ResponseEntity<RestResponse<Object>> handleNotFoundException(Exception ex) {
         RestResponse<Object> res = new RestResponse<>();
         res.setStatusCode(HttpStatus.NOT_FOUND.value());
-        res.setError(ex.getMessage());
-        res.setMessage("404 Not Found. URL may not exist...");
+        res.setError("404 Not Found. URL may not exist...");
+        res.setMessage(ex.getMessage());
+
+        // res.setError(ex.getMessage());
+        // res.setMessage("404 Not Found. URL may not exist...");
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }

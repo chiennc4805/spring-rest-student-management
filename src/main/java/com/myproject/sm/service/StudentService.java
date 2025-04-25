@@ -58,19 +58,14 @@ public class StudentService {
     public Student updateStudent(Student reqStudent) {
         Student studentDB = this.fetchStudentById(reqStudent.getId());
         // update student
-        if (reqStudent.getName() != null) {
-            studentDB.setName(reqStudent.getName());
-        }
-        if (reqStudent.getGender() != null) {
-            studentDB.setGender(reqStudent.getGender());
-        }
-        if (reqStudent.getBirthDate() != null) {
-            studentDB.setBirthDate(reqStudent.getBirthDate());
-        }
+        studentDB.setName(reqStudent.getName());
+        studentDB.setGender(reqStudent.getGender());
+        studentDB.setBirthDate(reqStudent.getBirthDate());
         if (reqStudent.getParent() != null) {
             Parent parent = this.parentService.fetchParentById(reqStudent.getParent().getId());
             studentDB.setParent(parent != null ? parent : null);
         }
+
         return this.studentRepository.save(studentDB);
     }
 
