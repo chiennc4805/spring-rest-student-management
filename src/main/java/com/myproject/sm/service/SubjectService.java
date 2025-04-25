@@ -58,6 +58,11 @@ public class SubjectService {
     }
 
     public void deleteSubject(String id) {
+        // delete subject inside teacher_skill
+        Subject subject = this.fetchSubjectById(id);
+        subject.getTeachers().forEach(t -> t.getSubjects().remove(subject));
+
+        // delete subject in subject table
         this.subjectRepository.deleteById(id);
     }
 

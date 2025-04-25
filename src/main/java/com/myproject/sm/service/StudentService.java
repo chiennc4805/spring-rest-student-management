@@ -25,12 +25,12 @@ public class StudentService {
         this.parentService = parentService;
     }
 
-    public Student handleCreateStudent(Student student) {
-        if (student.getParent() != null) {
-            Parent parent = this.parentService.fetchParentById(student.getParent().getId());
-            student.setParent(parent != null ? parent : null);
+    public Student handleCreateStudent(Student reqStudent) {
+        if (reqStudent.getParent() != null) {
+            Parent parent = this.parentService.fetchParentById(reqStudent.getParent().getId());
+            reqStudent.setParent(parent);
         }
-        return this.studentRepository.save(student);
+        return this.studentRepository.save(reqStudent);
     }
 
     public ResultPaginationDTO fetchAllStudents(Specification<Student> spec, Pageable pageable) {

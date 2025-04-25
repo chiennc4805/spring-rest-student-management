@@ -1,10 +1,16 @@
 package com.myproject.sm.domain;
 
+import java.util.List;
+
 import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.UuidGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,5 +30,9 @@ public class Subject {
 
     private double pricePerDay;
     private double salaryPerDay;
+
+    @ManyToMany(mappedBy = "subjects")
+    @JsonIgnore
+    private List<Teacher> teachers;
 
 }

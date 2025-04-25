@@ -1,5 +1,6 @@
 package com.myproject.sm.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,5 +15,7 @@ public interface SubjectRepository extends JpaRepository<Subject, String>, JpaSp
     Optional<Subject> findByName(String name);
 
     boolean existsByName(String name);
+
+    List<Subject> findByIdIn(List<String> ids);
 
 }
