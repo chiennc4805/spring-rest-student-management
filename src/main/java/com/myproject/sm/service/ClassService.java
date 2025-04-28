@@ -38,8 +38,13 @@ public class ClassService {
     }
 
     public Class handleCreateClass(Class reqClass) {
+        // if (reqClass.getTeacher() != null) {
+        // Teacher teacher =
+        // this.teacherService.handleFetchTeacherById(reqClass.getTeacher().getId());
+        // reqClass.setTeacher(teacher);
+        // }
         if (reqClass.getTeacher() != null) {
-            Teacher teacher = this.teacherService.handleFetchTeacherById(reqClass.getTeacher().getId());
+            Teacher teacher = this.teacherService.handleFetchTeacherByTelephone(reqClass.getTeacher().getTelephone());
             reqClass.setTeacher(teacher);
         }
         if (reqClass.getCampus() != null) {
@@ -86,6 +91,24 @@ public class ClassService {
     }
 
     public Class handleUpdateClass(Class reqClass) {
+        // if (reqClass.getTeacher() != null) {
+        // Teacher teacher =
+        // this.teacherService.handleFetchTeacherById(reqClass.getTeacher().getId());
+        // reqClass.setTeacher(teacher);
+        // }
+        if (reqClass.getTeacher() != null) {
+            Teacher teacher = this.teacherService.handleFetchTeacherByTelephone(reqClass.getTeacher().getTelephone());
+            reqClass.setTeacher(teacher);
+        }
+        if (reqClass.getCampus() != null) {
+            Campus campus = this.campusService.fetchCampusById(reqClass.getCampus().getId());
+            reqClass.setCampus(campus);
+        }
+        if (reqClass.getSubject() != null) {
+            Subject subject = this.subjectService.fetchSubjectById(reqClass.getSubject().getId());
+            reqClass.setSubject(subject);
+        }
+
         return this.classRepository.save(reqClass);
     }
 

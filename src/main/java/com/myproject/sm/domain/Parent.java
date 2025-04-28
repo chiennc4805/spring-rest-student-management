@@ -6,13 +6,14 @@ import java.util.List;
 import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.UuidGenerator;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -46,6 +47,10 @@ public class Parent {
     @OneToMany(mappedBy = "parent", orphanRemoval = true, cascade = { CascadeType.PERSIST })
     @JsonIgnoreProperties("parent")
     private List<Student> students;
+
+    @OneToOne()
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @PreRemove
     public void handleBeforeRemove() {

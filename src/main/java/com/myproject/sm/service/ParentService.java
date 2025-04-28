@@ -8,22 +8,34 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.myproject.sm.domain.Parent;
+import com.myproject.sm.domain.Role;
+import com.myproject.sm.domain.User;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO.Meta;
-import com.myproject.sm.domain.Parent;
 import com.myproject.sm.repository.ParentRepository;
+import com.myproject.sm.util.NumberUtil;
 
 @Service
 public class ParentService {
 
     private final ParentRepository parentRepository;
+    private final RoleService roleService;
+    private final UserService userService;
 
-    public ParentService(ParentRepository parentRepository) {
+    public ParentService(ParentRepository parentRepository, RoleService roleService, UserService userService) {
         this.parentRepository = parentRepository;
+        this.roleService = roleService;
+        this.userService = userService;
     }
 
-    public Parent handleCreateParent(Parent parent) {
-        return this.parentRepository.save(parent);
+    public Parent handleCreateParent(Parent reqParent) {
+        // create user has role PARENT
+        Role role = this.roleService.handleFetchRoleByName("PARENT");
+        User newUser = new User(reqParent.getTelephone(), NumberUtil.getRandomNumberString(), role);
+        User user = userService.handleCreateUser(newUser);
+        reqParent.setUser(user);
+
+        return this.parentRepository.save(reqParent);
     }
 
     public ResultPaginationDTO fetchAllParents(Specification<Parent> spec, Pageable pageable) {

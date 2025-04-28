@@ -21,4 +21,13 @@ public class RoleService {
         return roleOptional.isPresent() ? roleOptional.get() : null;
     }
 
+    public Role handleFetchRoleByName(String name) {
+        Optional<Role> roleOptional = this.roleRepository.findByName(name);
+        return roleOptional.isPresent() ? roleOptional.get() : null;
+    }
+
+    public boolean isExistByName(String name) {
+        return this.roleRepository.existsByName(name);
+    }
+
 }

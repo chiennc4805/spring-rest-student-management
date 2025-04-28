@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,5 +56,9 @@ public class Teacher {
     @OneToMany(mappedBy = "teacher")
     @JsonIgnore
     private List<Class> classes;
+
+    @OneToOne()
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }
