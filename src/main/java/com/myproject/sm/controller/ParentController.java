@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.sm.domain.Parent;
 import com.myproject.sm.domain.Student;
-import com.myproject.sm.domain.response.ResultPaginationDTO;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.service.ParentService;
 import com.myproject.sm.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
@@ -31,14 +31,18 @@ public class ParentController {
     }
 
     @PostMapping("/parents")
-    public ResponseEntity<Parent> createStudent(@Valid @RequestBody Parent reqStudent) {
-        Parent newStudent = this.parentService.handleCreateParent(reqStudent);
+    public ResponseEntity<Parent> createParent(@Valid @RequestBody Parent reqParent) throws IdInvalidException {
+        if (this.parentService.isExistByTelephone(reqParent.getTelephone())) {
+            throw new IdInvalidException("Số điện thoại " + reqParent.getTelephone() + " đã tồn tại");
+        }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(newStudent);
+        Parent newParent = this.parentService.handleCreateParent(reqParent);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(newParent);
     }
 
     @GetMapping("/parents")
-    public ResponseEntity<ResultPaginationDTO> fetchAllStudents(
+    public ResponseEntity<ResultPaginationDTO> fetchAllParents(
             @Filter Specification<Parent> spec,
             Pageable pageable) {
 
@@ -46,27 +50,33 @@ public class ParentController {
     }
 
     @GetMapping("/parents/{id}")
-    public ResponseEntity<Parent> fetchStudentById(@PathVariable("id") String id) throws IdInvalidException {
-        Parent student = this.parentService.fetchParentById(id);
-        if (student == null) {
+    public ResponseEntity<Parent> fetchParentById(@PathVariable("id") String id) throws IdInvalidException {
+        Parent parent = this.parentService.fetchParentById(id);
+        if (parent == null) {
             throw new IdInvalidException("Parent với id = " + id + " không tồn tại");
         }
-        return ResponseEntity.ok(student);
+        return ResponseEntity.ok(parent);
     }
 
     @PutMapping("/parents")
-    public ResponseEntity<Parent> updateStudent(@RequestBody Parent reqParent) throws IdInvalidException {
+    public ResponseEntity<Parent> updateParent(@RequestBody Parent reqParent) throws IdInvalidException {
         Parent parentDB = this.parentService.fetchParentById(reqParent.getId());
         if (parentDB == null) {
             throw new IdInvalidException("Parent với id = " + reqParent.getId() + " không tồn tại");
         }
+
+        if (this.parentService.isExistByTelephone(reqParent.getTelephone())
+                && !reqParent.getTelephone().equals(parentDB.getTelephone())) {
+            throw new IdInvalidException("Số điện thoại " + reqParent.getTelephone() + " đã tồn tại");
+        }
+
         Parent updatedParent = this.parentService.updateParent(reqParent);
 
         return ResponseEntity.ok(updatedParent);
     }
 
     @DeleteMapping("/parents/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable("id") String id) throws IdInvalidException {
+    public ResponseEntity<Void> deleteParent(@PathVariable("id") String id) throws IdInvalidException {
         Parent parentDB = this.parentService.fetchParentById(id);
         if (parentDB == null) {
             throw new IdInvalidException("Parent với id = " + id + " không tồn tại");

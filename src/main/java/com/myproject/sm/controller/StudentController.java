@@ -3,7 +3,8 @@ package com.myproject.sm.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.sm.domain.Student;
-import com.myproject.sm.domain.response.ResultPaginationDTO;
+import com.myproject.sm.domain.dto.StudentDTO;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.service.StudentService;
 import com.myproject.sm.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
@@ -33,10 +34,8 @@ public class StudentController {
     }
 
     @PostMapping("/students")
-    public ResponseEntity<Student> createStudent(@Valid @RequestBody Student reqStudent) {
-        Student newStudent = this.studentService.handleCreateStudent(reqStudent);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(newStudent);
+    public ResponseEntity<StudentDTO> createStudent(@Valid @RequestBody StudentDTO reqStudentDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.studentService.handleCreateStudent(reqStudentDTO));
     }
 
     @GetMapping("/students")
@@ -44,36 +43,36 @@ public class StudentController {
             @Filter Specification<Student> spec,
             Pageable pageable) {
 
-        return ResponseEntity.ok(this.studentService.fetchAllStudents(spec, pageable));
+        return ResponseEntity.ok(this.studentService.handleFetchAllStudents(spec, pageable));
     }
 
     @GetMapping("/students/{id}")
-    public ResponseEntity<Student> fetchStudentById(@PathVariable("id") String id) throws IdInvalidException {
-        Student student = this.studentService.fetchStudentById(id);
+    public ResponseEntity<StudentDTO> handleFetchStudentById(@PathVariable("id") String id) throws IdInvalidException {
+        Student student = this.studentService.findStudentById(id);
         if (student == null) {
             throw new IdInvalidException("Student with id = " + id + " không tồn tại");
         }
-        return ResponseEntity.ok(student);
+
+        return ResponseEntity.ok(this.studentService.convertStudentToStudentDTO(student));
     }
 
     @PutMapping("/students")
-    public ResponseEntity<Student> updateStudent(@RequestBody Student reqStudent) throws IdInvalidException {
-        Student studentDB = this.studentService.fetchStudentById(reqStudent.getId());
+    public ResponseEntity<StudentDTO> updateStudent(@RequestBody StudentDTO reqStudentDTO) throws IdInvalidException {
+        Student studentDB = this.studentService.findStudentById(reqStudentDTO.getId());
         if (studentDB == null) {
-            throw new IdInvalidException("Student with id = " + reqStudent.getId() + " không tồn tại");
+            throw new IdInvalidException("Student with id = " + reqStudentDTO.getId() + " không tồn tại");
         }
-        Student updatedStudent = this.studentService.updateStudent(reqStudent);
 
-        return ResponseEntity.ok(updatedStudent);
+        return ResponseEntity.ok(this.studentService.handleUpdateStudent(reqStudentDTO));
     }
 
     @DeleteMapping("/students/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable("id") String id) throws IdInvalidException {
-        Student studentDB = this.studentService.fetchStudentById(id);
+        Student studentDB = this.studentService.findStudentById(id);
         if (studentDB == null) {
             throw new IdInvalidException("Student with id = " + id + " không tồn tại");
         }
-        this.studentService.deleteStudent(id);
+        this.studentService.handleDeleteStudent(id);
         return ResponseEntity.ok(null);
     }
 

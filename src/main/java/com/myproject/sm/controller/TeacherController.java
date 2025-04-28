@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.sm.domain.Teacher;
-import com.myproject.sm.domain.response.ResultPaginationDTO;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.service.TeacherService;
 import com.myproject.sm.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
@@ -30,7 +30,10 @@ public class TeacherController {
     }
 
     @PostMapping("/teachers")
-    public ResponseEntity<Teacher> createTeacher(@Valid @RequestBody Teacher reqTeacher) {
+    public ResponseEntity<Teacher> createTeacher(@Valid @RequestBody Teacher reqTeacher) throws IdInvalidException {
+        if (this.teacherService.isExistByTelephone(reqTeacher.getTelephone())) {
+            throw new IdInvalidException("Số điện thoại " + reqTeacher.getTelephone() + " đã tồn tại");
+        }
         Teacher newTeacher = this.teacherService.handleCreateTeacher(reqTeacher);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newTeacher);
@@ -59,6 +62,12 @@ public class TeacherController {
         if (teacherDB == null) {
             throw new IdInvalidException("Teacher with id = " + reqTeacher.getId() + " không tồn tại");
         }
+
+        if (this.teacherService.isExistByTelephone(reqTeacher.getTelephone())
+                && !reqTeacher.getTelephone().equals(teacherDB.getTelephone())) {
+            throw new IdInvalidException("Số điện thoại " + reqTeacher.getTelephone() + " đã tồn tại");
+        }
+
         Teacher updatedStudent = this.teacherService.handleUpdateTeacher(reqTeacher);
 
         return ResponseEntity.ok(updatedStudent);

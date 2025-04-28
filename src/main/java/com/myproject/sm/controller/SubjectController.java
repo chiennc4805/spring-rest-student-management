@@ -1,5 +1,6 @@
 package com.myproject.sm.controller;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -10,10 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.sm.domain.Subject;
-import com.myproject.sm.domain.response.ResultPaginationDTO;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.service.SubjectService;
 import com.myproject.sm.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
@@ -43,12 +45,27 @@ public class SubjectController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newSubject);
     }
 
+    // @GetMapping("/subjects")
+    // public ResponseEntity<ResultPaginationDTO> fetchAllSubjects(
+    // @Filter Specification<Subject> spec,
+    // Pageable pageable) {
+
+    // return ResponseEntity.ok(this.subjectService.fetchAllSubjects(spec,
+    // pageable));
+    // }
+
     @GetMapping("/subjects")
     public ResponseEntity<ResultPaginationDTO> fetchAllSubjects(
             @Filter Specification<Subject> spec,
-            Pageable pageable) {
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
 
-        return ResponseEntity.ok(this.subjectService.fetchAllSubjects(spec, pageable));
+        if (page == null && size == null) {
+            return ResponseEntity.ok(this.subjectService.fetchAllSubjects());
+        } else {
+            Pageable pageable = PageRequest.of(page - 1, size);
+            return ResponseEntity.ok(this.subjectService.fetchAllSubjects(spec, pageable));
+        }
     }
 
     @GetMapping("/subjects/{id}")

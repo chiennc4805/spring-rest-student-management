@@ -1,4 +1,4 @@
-package com.myproject.sm.domain.request;
+package com.myproject.sm.domain.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

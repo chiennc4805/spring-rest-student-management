@@ -36,4 +36,8 @@ public class Campus {
     @JsonIgnoreProperties("campus")
     private List<Facility> facilities;
 
+    @OneToMany(mappedBy = "campus")
+    @JsonIgnore
+    private List<Class> classes;
+
 }

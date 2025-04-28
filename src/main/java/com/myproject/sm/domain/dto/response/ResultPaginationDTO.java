@@ -1,4 +1,4 @@
-package com.myproject.sm.domain.response;
+package com.myproject.sm.domain.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

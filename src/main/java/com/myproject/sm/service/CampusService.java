@@ -8,8 +8,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.myproject.sm.domain.Campus;
-import com.myproject.sm.domain.response.ResultPaginationDTO;
-import com.myproject.sm.domain.response.ResultPaginationDTO.Meta;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO.Meta;
 import com.myproject.sm.repository.CampusRepository;
 
 @Service

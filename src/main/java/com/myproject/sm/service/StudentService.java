@@ -1,17 +1,22 @@
 package com.myproject.sm.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.myproject.sm.domain.Class;
+import com.myproject.sm.domain.ClassEnrollment;
 import com.myproject.sm.domain.Parent;
 import com.myproject.sm.domain.Student;
-import com.myproject.sm.domain.response.ResultPaginationDTO;
-import com.myproject.sm.domain.response.ResultPaginationDTO.Meta;
+import com.myproject.sm.domain.dto.StudentDTO;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO.Meta;
 import com.myproject.sm.repository.StudentRepository;
 
 @Service
@@ -19,21 +24,77 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final ParentService parentService;
+    private final ClassEnrollmentService classEnrollmentService;
+    private final ClassService classService;
 
-    public StudentService(StudentRepository studentRepository, ParentService parentService) {
+    public StudentService(StudentRepository studentRepository, ParentService parentService,
+            ClassEnrollmentService classEnrollmentService, ClassService classService) {
         this.studentRepository = studentRepository;
         this.parentService = parentService;
+        this.classEnrollmentService = classEnrollmentService;
+        this.classService = classService;
+
     }
 
-    public Student handleCreateStudent(Student reqStudent) {
-        if (reqStudent.getParent() != null) {
-            Parent parent = this.parentService.fetchParentById(reqStudent.getParent().getId());
-            reqStudent.setParent(parent);
+    public Student convertStudentDTOtoStudent(StudentDTO studentDTO) {
+        Student student = new Student();
+        student.setId(studentDTO.getId());
+        student.setBirthDate(studentDTO.getBirthDate());
+        student.setGender(studentDTO.getGender());
+        student.setName(studentDTO.getName());
+        student.setParent(studentDTO.getParent());
+
+        return student;
+    }
+
+    public StudentDTO convertStudentToStudentDTO(Student student) {
+        StudentDTO studentDTO = new StudentDTO();
+        studentDTO.setId(student.getId());
+        studentDTO.setBirthDate(student.getBirthDate());
+        studentDTO.setGender(student.getGender());
+        studentDTO.setName(student.getName());
+        studentDTO.setParent(student.getParent());
+
+        List<Class> classes = student.getClassEnrollments().stream().map(c -> c.getEnrollmentClass())
+                .collect(Collectors.toList());
+
+        studentDTO.setClasses(classes);
+
+        return studentDTO;
+    }
+
+    public StudentDTO handleCreateStudent(StudentDTO reqStudentDTO) {
+        // check parent valid
+        if (reqStudentDTO.getParent() != null) {
+            Parent parent = this.parentService.fetchParentById(reqStudentDTO.getParent().getId());
+            reqStudentDTO.setParent(parent);
         }
-        return this.studentRepository.save(reqStudent);
+
+        // create student
+        Student student = this.studentRepository.save(this.convertStudentDTOtoStudent(reqStudentDTO));
+        reqStudentDTO.setId(student.getId());
+
+        ClassEnrollment classEnrollment = new ClassEnrollment();
+        List<Class> classes = new ArrayList<>();
+        for (Class cl : reqStudentDTO.getClasses()) {
+            Class classDB = this.classService.handleFetchClassById(cl.getId());
+            if (classDB != null) {
+                // save in ClassEnrollment table
+                classEnrollment.setEnrollmentStudent(student);
+                classEnrollment.setEnrollmentClass(classDB);
+                this.classEnrollmentService.handleCreateClassEnrollment(classEnrollment);
+
+                // save in list class of studentDTO
+                classes.add(classDB);
+            }
+        }
+
+        reqStudentDTO.setClasses(classes);
+
+        return reqStudentDTO;
     }
 
-    public ResultPaginationDTO fetchAllStudents(Specification<Student> spec, Pageable pageable) {
+    public ResultPaginationDTO handleFetchAllStudents(Specification<Student> spec, Pageable pageable) {
         Page<Student> pageStudent = this.studentRepository.findAll(spec, pageable);
         ResultPaginationDTO res = new ResultPaginationDTO();
         Meta mt = new ResultPaginationDTO.Meta();
@@ -44,33 +105,67 @@ public class StudentService {
         mt.setTotal(pageStudent.getTotalElements());
 
         res.setMeta(mt);
-        res.setResult(pageStudent.getContent());
+
+        List<StudentDTO> studentDTOs = pageStudent.getContent().stream().map(this::convertStudentToStudentDTO)
+                .collect(Collectors.toList());
+
+        res.setResult(studentDTOs);
 
         return res;
     }
 
-    public Student fetchStudentById(String id) {
+    public StudentDTO handleFetchStudentById(String id) {
         Optional<Student> studentOptional = this.studentRepository.findById(id);
-        Student s = studentOptional.isPresent() ? studentOptional.get() : null;
-        return s;
+        return studentOptional.isPresent() ? this.convertStudentToStudentDTO(studentOptional.get()) : null;
     }
 
-    public Student updateStudent(Student reqStudent) {
-        Student studentDB = this.fetchStudentById(reqStudent.getId());
-        // update student
-        studentDB.setName(reqStudent.getName());
-        studentDB.setGender(reqStudent.getGender());
-        studentDB.setBirthDate(reqStudent.getBirthDate());
-        if (reqStudent.getParent() != null) {
-            Parent parent = this.parentService.fetchParentById(reqStudent.getParent().getId());
-            studentDB.setParent(parent != null ? parent : null);
+    public StudentDTO handleUpdateStudent(StudentDTO reqStudentDTO) {
+        // check parent valid
+        if (reqStudentDTO.getParent() != null) {
+            Parent parent = this.parentService.fetchParentById(reqStudentDTO.getParent().getId());
+            reqStudentDTO.setParent(parent);
         }
 
-        return this.studentRepository.save(studentDB);
+        Student student = this.convertStudentDTOtoStudent(reqStudentDTO);
+
+        // update student
+        this.studentRepository.save(student);
+
+        // update ClassEnrollment
+        this.classEnrollmentService.deleteClassEnrollment(student);
+
+        ClassEnrollment classEnrollment = new ClassEnrollment();
+        List<Class> classes = new ArrayList<>();
+        if (reqStudentDTO.getClasses() != null && !reqStudentDTO.getClasses().isEmpty()) {
+            for (Class cl : reqStudentDTO.getClasses()) {
+                Class classDB = this.classService.handleFetchClassById(cl.getId());
+                if (classDB != null) {
+                    // save in ClassEnrollment table
+                    classEnrollment.setEnrollmentStudent(student);
+                    classEnrollment.setEnrollmentClass(classDB);
+                    this.classEnrollmentService.handleCreateClassEnrollment(classEnrollment);
+
+                    // save in list class of studentDTO
+                    classes.add(classDB);
+                }
+            }
+        }
+
+        reqStudentDTO.setClasses(classes);
+
+        return reqStudentDTO;
     }
 
-    public void deleteStudent(String id) {
+    public void handleDeleteStudent(String id) {
+        // delete in ClassEnrollment table
+        Student studentDB = this.findStudentById(id);
+        this.classEnrollmentService.deleteClassEnrollment(studentDB);
+
         this.studentRepository.deleteById(id);
     }
 
+    public Student findStudentById(String id) {
+        Optional<Student> studentOptional = this.studentRepository.findById(id);
+        return studentOptional.isPresent() ? studentOptional.get() : null;
+    }
 }

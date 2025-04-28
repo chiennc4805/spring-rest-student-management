@@ -1,4 +1,4 @@
-package com.myproject.sm.domain.response;
+package com.myproject.sm.domain.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;

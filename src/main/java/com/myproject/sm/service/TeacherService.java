@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.myproject.sm.domain.Subject;
 import com.myproject.sm.domain.Teacher;
-import com.myproject.sm.domain.response.ResultPaginationDTO;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.repository.SubjectRepository;
 import com.myproject.sm.repository.TeacherRepository;
 
@@ -67,6 +67,10 @@ public class TeacherService {
 
     public void deleteTeacher(String id) {
         this.teacherRepository.deleteById(id);
+    }
+
+    public boolean isExistByTelephone(String telephone) {
+        return this.teacherRepository.existsByTelephone(telephone);
     }
 
 }

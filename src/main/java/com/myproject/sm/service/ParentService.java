@@ -8,9 +8,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.myproject.sm.domain.Parent;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO.Meta;
 import com.myproject.sm.domain.Parent;
-import com.myproject.sm.domain.response.ResultPaginationDTO;
-import com.myproject.sm.domain.response.ResultPaginationDTO.Meta;
 import com.myproject.sm.repository.ParentRepository;
 
 @Service
@@ -64,6 +64,10 @@ public class ParentService {
 
     public void deleteParent(String id) {
         this.parentRepository.deleteById(id);
+    }
+
+    public boolean isExistByTelephone(String telephone) {
+        return this.parentRepository.existsByTelephone(telephone);
     }
 
 }

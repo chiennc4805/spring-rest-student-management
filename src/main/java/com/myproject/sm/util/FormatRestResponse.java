@@ -10,7 +10,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import com.myproject.sm.domain.response.RestResponse;
+import com.myproject.sm.domain.dto.response.RestResponse;
 
 import jakarta.servlet.http.HttpServletResponse;
 

@@ -1,5 +1,6 @@
 package com.myproject.sm.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -8,8 +9,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.myproject.sm.domain.Subject;
-import com.myproject.sm.domain.response.ResultPaginationDTO;
-import com.myproject.sm.domain.response.ResultPaginationDTO.Meta;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO.Meta;
 import com.myproject.sm.repository.SubjectRepository;
 
 @Service
@@ -23,6 +24,16 @@ public class SubjectService {
 
     public Subject handleCreateSubject(Subject reqSubject) {
         return this.subjectRepository.save(reqSubject);
+    }
+
+    public ResultPaginationDTO fetchAllSubjects() {
+        List<Subject> subjects = this.subjectRepository.findAll();
+        ResultPaginationDTO res = new ResultPaginationDTO();
+
+        res.setMeta(null);
+        res.setResult(subjects);
+
+        return res;
     }
 
     public ResultPaginationDTO fetchAllSubjects(Specification<Subject> spec, Pageable pageable) {

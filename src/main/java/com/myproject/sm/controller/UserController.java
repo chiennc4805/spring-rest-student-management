@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.sm.domain.Student;
 import com.myproject.sm.domain.User;
-import com.myproject.sm.domain.response.ResultPaginationDTO;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.service.UserService;
 import com.myproject.sm.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;

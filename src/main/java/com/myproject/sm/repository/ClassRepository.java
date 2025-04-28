@@ -3,12 +3,10 @@ package com.myproject.sm.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-
-import com.myproject.sm.domain.Parent;
+import com.myproject.sm.domain.Class;
 
 @Repository
-public interface ParentRepository extends JpaRepository<Parent, String>, JpaSpecificationExecutor<Parent> {
+public interface ClassRepository extends JpaRepository<Class, String>, JpaSpecificationExecutor<Class> {
 
-    boolean existsByTelephone(String telephone);
-
+    boolean existsByName(String name);
 }

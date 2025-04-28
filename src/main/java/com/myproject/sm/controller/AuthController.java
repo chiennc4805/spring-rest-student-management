@@ -2,8 +2,8 @@ package com.myproject.sm.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myproject.sm.domain.request.ReqLoginDTO;
-import com.myproject.sm.domain.response.ResLoginDTO;
+import com.myproject.sm.domain.dto.request.ReqLoginDTO;
+import com.myproject.sm.domain.dto.response.ResLoginDTO;
 import com.myproject.sm.util.SecurityUtil;
 
 import org.springframework.http.ResponseEntity;

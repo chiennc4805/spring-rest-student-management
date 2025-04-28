@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,5 +35,9 @@ public class Subject {
     @ManyToMany(mappedBy = "subjects")
     @JsonIgnore
     private List<Teacher> teachers;
+
+    @OneToMany(mappedBy = "subject")
+    @JsonIgnore
+    private List<Class> classes;
 
 }

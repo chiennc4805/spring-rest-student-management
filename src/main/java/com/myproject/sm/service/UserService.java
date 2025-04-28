@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.myproject.sm.domain.Role;
 import com.myproject.sm.domain.User;
-import com.myproject.sm.domain.response.ResultPaginationDTO;
-import com.myproject.sm.domain.response.ResultPaginationDTO.Meta;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO.Meta;
 import com.myproject.sm.repository.UserRepository;
 
 @Service
