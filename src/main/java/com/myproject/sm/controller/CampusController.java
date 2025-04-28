@@ -1,5 +1,6 @@
 package com.myproject.sm.controller;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -10,9 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.sm.domain.Campus;
+import com.myproject.sm.domain.Subject;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.service.CampusService;
 import com.myproject.sm.util.error.IdInvalidException;
@@ -44,11 +47,17 @@ public class CampusController {
     }
 
     @GetMapping("/campus")
-    public ResponseEntity<ResultPaginationDTO> getAllCampus(
+    public ResponseEntity<ResultPaginationDTO> fetchAllSubjects(
             @Filter Specification<Campus> spec,
-            Pageable pageable) {
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
 
-        return ResponseEntity.ok(this.campusService.fetchAllCampus(spec, pageable));
+        if (page == null && size == null) {
+            return ResponseEntity.ok(this.campusService.fetchAllCampus());
+        } else {
+            Pageable pageable = PageRequest.of(page - 1, size);
+            return ResponseEntity.ok(this.campusService.fetchAllCampus(spec, pageable));
+        }
     }
 
     @GetMapping("/campus/{id}")

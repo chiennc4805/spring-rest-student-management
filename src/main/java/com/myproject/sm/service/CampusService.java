@@ -1,5 +1,6 @@
 package com.myproject.sm.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.myproject.sm.domain.Campus;
+import com.myproject.sm.domain.Subject;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO.Meta;
 import com.myproject.sm.repository.CampusRepository;
@@ -23,6 +25,16 @@ public class CampusService {
 
     public Campus handleCreateCampus(Campus reqCampus) {
         return this.campusRepository.save(reqCampus);
+    }
+
+    public ResultPaginationDTO fetchAllCampus() {
+        List<Campus> campus = this.campusRepository.findAll();
+        ResultPaginationDTO res = new ResultPaginationDTO();
+
+        res.setMeta(null);
+        res.setResult(campus);
+
+        return res;
     }
 
     public ResultPaginationDTO fetchAllCampus(Specification<Campus> spec, Pageable pageable) {
