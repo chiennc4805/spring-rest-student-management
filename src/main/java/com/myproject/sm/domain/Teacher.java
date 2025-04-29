@@ -9,6 +9,7 @@ import org.hibernate.annotations.UuidGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -57,7 +58,7 @@ public class Teacher {
     @JsonIgnore
     private List<Class> classes;
 
-    @OneToOne()
+    @OneToOne(orphanRemoval = true, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private User user;
 

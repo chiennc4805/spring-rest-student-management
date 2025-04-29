@@ -38,11 +38,11 @@ public class User {
     private Role role;
 
     @OneToOne(mappedBy = "user")
-    @JsonIgnoreProperties("user")
+    @JsonIgnoreProperties({ "user", "subjects" })
     private Teacher teacherInfo;
 
     @OneToOne(mappedBy = "user")
-    @JsonIgnoreProperties("user")
+    @JsonIgnoreProperties({ "user", "subjects" })
     private Parent parentInfo;
 
 }
