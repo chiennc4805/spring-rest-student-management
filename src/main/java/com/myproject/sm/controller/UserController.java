@@ -1,8 +1,18 @@
 package com.myproject.sm.controller;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myproject.sm.domain.Student;
 import com.myproject.sm.domain.User;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.service.UserService;
@@ -10,19 +20,6 @@ import com.myproject.sm.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
-
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class UserController {
@@ -36,7 +33,11 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> createUser(@Valid @RequestBody User reqUser) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody User reqUser) throws IdInvalidException {
+        if (this.userService.isExistByUsername(reqUser.getUsername())) {
+            throw new IdInvalidException("Tài khoản " + reqUser.getUsername() + " đã tồn tại");
+        }
+
         String hashPassword = this.passwordEncoder.encode(reqUser.getPassword());
         reqUser.setPassword(hashPassword);
         User newUser = this.userService.handleCreateUser(reqUser);
@@ -48,6 +49,10 @@ public class UserController {
         User userDB = this.userService.fetchUserById(reqUser.getId());
         if (userDB == null) {
             throw new IdInvalidException("User with id = " + reqUser.getId() + " không tồn tại");
+        }
+        if (this.userService.isExistByUsername(reqUser.getUsername())
+                && !reqUser.getUsername().equals(userDB.getUsername())) {
+            throw new IdInvalidException("Tài khoản " + reqUser.getUsername() + " đã tồn tại");
         }
         User updatedUser = this.userService.handleUpdateUser(reqUser);
         return ResponseEntity.ok(updatedUser);

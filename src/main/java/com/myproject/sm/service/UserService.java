@@ -78,4 +78,21 @@ public class UserService {
         Optional<User> userOptional = this.userRepository.findByUsername(username);
         return userOptional.isPresent() ? userOptional.get() : null;
     }
+
+    public void updateUserToken(String token, String username) {
+        User currentUser = this.handleGetUserByUsername(username);
+        if (currentUser != null) {
+            currentUser.setRefreshToken(token);
+            this.userRepository.save(currentUser);
+        }
+    }
+
+    public User getUserByRefreshTokenAndUsername(String refreshToken, String username) {
+        Optional<User> userOptional = this.userRepository.findByRefreshTokenAndUsername(refreshToken, username);
+        return userOptional.isPresent() ? userOptional.get() : null;
+    }
+
+    public boolean isExistByUsername(String username) {
+        return this.userRepository.existsByUsername(username);
+    }
 }

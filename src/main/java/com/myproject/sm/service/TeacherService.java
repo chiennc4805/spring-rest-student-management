@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.myproject.sm.domain.Role;
@@ -16,7 +17,6 @@ import com.myproject.sm.domain.User;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.repository.SubjectRepository;
 import com.myproject.sm.repository.TeacherRepository;
-import com.myproject.sm.util.NumberUtil;
 
 @Service
 public class TeacherService {
@@ -25,19 +25,26 @@ public class TeacherService {
     private final SubjectRepository subjectRepository;
     private final RoleService roleService;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     public TeacherService(TeacherRepository teacherRepository, SubjectRepository subjectRepository,
-            RoleService roleService, UserService userService) {
+            RoleService roleService, UserService userService, PasswordEncoder passwordEncoder) {
         this.teacherRepository = teacherRepository;
         this.subjectRepository = subjectRepository;
         this.roleService = roleService;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Teacher handleCreateTeacher(Teacher reqTeacher) {
         // create user has role TEACHER
         Role role = this.roleService.handleFetchRoleByName("TEACHER");
-        User newUser = new User(reqTeacher.getTelephone(), NumberUtil.getRandomNumberString(), role);
+        User newUser = new User();
+        newUser.setUsername(reqTeacher.getTelephone());
+        newUser.setName(reqTeacher.getName());
+        newUser.setRole(role);
+        newUser.setPassword(passwordEncoder.encode("123456"));
+
         User user = userService.handleCreateUser(newUser);
         reqTeacher.setUser(user);
 

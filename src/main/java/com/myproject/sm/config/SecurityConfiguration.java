@@ -6,7 +6,6 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -78,12 +77,12 @@ public class SecurityConfiguration {
                                 .anyRequest().authenticated())
 
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
-                        // edit response báo lỗi
-                        .authenticationEntryPoint(customAuthenticationEntryPoint))
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)) // edit response báo lỗi
 
                 .formLogin(f -> f.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        // notice using stateless
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // notice
+                                                                                                               // using
+                                                                                                               // stateless
 
         return http.build();
     }
@@ -94,7 +93,7 @@ public class SecurityConfiguration {
         grantedAuthoritiesConverter.setAuthorityPrefix("");
 
         // claim name ở đây cần tương ứng với claim name lúc create token
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("hoidanit");
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("permission");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);

@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.myproject.sm.domain.Parent;
@@ -13,7 +14,6 @@ import com.myproject.sm.domain.User;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO.Meta;
 import com.myproject.sm.repository.ParentRepository;
-import com.myproject.sm.util.NumberUtil;
 
 @Service
 public class ParentService {
@@ -21,17 +21,25 @@ public class ParentService {
     private final ParentRepository parentRepository;
     private final RoleService roleService;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public ParentService(ParentRepository parentRepository, RoleService roleService, UserService userService) {
+    public ParentService(ParentRepository parentRepository, RoleService roleService, UserService userService,
+            PasswordEncoder passwordEncoder) {
         this.parentRepository = parentRepository;
         this.roleService = roleService;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Parent handleCreateParent(Parent reqParent) {
         // create user has role PARENT
         Role role = this.roleService.handleFetchRoleByName("PARENT");
-        User newUser = new User(reqParent.getTelephone(), NumberUtil.getRandomNumberString(), role);
+        User newUser = new User();
+        newUser.setUsername(reqParent.getTelephone());
+        newUser.setName(reqParent.getName());
+        newUser.setRole(role);
+        newUser.setPassword(passwordEncoder.encode("123456"));
+
         User user = userService.handleCreateUser(newUser);
         reqParent.setUser(user);
 

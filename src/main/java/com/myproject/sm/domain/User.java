@@ -1,28 +1,25 @@
 package com.myproject.sm.domain;
 
+import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.UuidGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "users")
-@NoArgsConstructor
 public class User {
-
-    public User(String username, String password, Role role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
 
     @Id
     @UuidGenerator
@@ -30,21 +27,22 @@ public class User {
     private String username;
     private String password;
 
+    @Nationalized
+    private String name;
+
+    @Column(columnDefinition = "varchar(max)")
+    private String refreshToken;
+
     @ManyToOne()
     @JoinColumn(name = "role_id")
     private Role role;
 
-    // private UserLogin userInfo;
+    @OneToOne(mappedBy = "user")
+    @JsonIgnoreProperties("user")
+    private Teacher teacherInfo;
 
-    // @Getter
-    // @Setter
-    // @AllArgsConstructor
-    // @NoArgsConstructor
-    // public static class UserLogin {
-    // private String id;
-    // private String telephone;
-    // private List<Class> classes;
-
-    // }
+    @OneToOne(mappedBy = "user")
+    @JsonIgnoreProperties("user")
+    private Parent parentInfo;
 
 }
