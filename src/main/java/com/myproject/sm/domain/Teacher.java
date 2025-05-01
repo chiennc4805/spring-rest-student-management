@@ -7,7 +7,7 @@ import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.UuidGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -51,7 +51,7 @@ public class Teacher {
 
     @ManyToMany
     @JoinTable(name = "teacher_skills", joinColumns = @JoinColumn(name = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
-    @JsonIgnoreProperties("teachers")
+    @JsonIncludeProperties({ "id", "name" })
     private List<Subject> subjects;
 
     @OneToMany(mappedBy = "teacher")
@@ -60,6 +60,7 @@ public class Teacher {
 
     @OneToOne(orphanRemoval = true, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
 }

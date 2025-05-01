@@ -1,14 +1,16 @@
 package com.myproject.sm.domain;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.UuidGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -30,14 +32,23 @@ public class Class {
 
     @ManyToOne
     @JoinColumn(name = "subject_id")
+    @JsonIncludeProperties({ "name" })
     private Subject subject;
 
     @ManyToOne
     @JoinColumn(name = "campus_id")
+    @JsonIncludeProperties({ "name", "address" })
     private Campus campus;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")
+    @JsonIncludeProperties({ "name", "telephone" })
     private Teacher teacher;
+
+    private LocalDate openDay;
+
+    @OneToMany(mappedBy = "classInfo")
+    @JsonIncludeProperties("id")
+    private List<Schedule> schedules;
 
 }
