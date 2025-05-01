@@ -32,17 +32,17 @@ public class Class {
 
     @ManyToOne
     @JoinColumn(name = "subject_id")
-    @JsonIncludeProperties({ "name" })
+    @JsonIncludeProperties({ "id", "name" })
     private Subject subject;
 
     @ManyToOne
     @JoinColumn(name = "campus_id")
-    @JsonIncludeProperties({ "name", "address" })
+    @JsonIncludeProperties({ "id", "name", "address" })
     private Campus campus;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")
-    @JsonIncludeProperties({ "name", "telephone" })
+    @JsonIncludeProperties({ "id", "name", "telephone" })
     private Teacher teacher;
 
     private LocalDate openDay;

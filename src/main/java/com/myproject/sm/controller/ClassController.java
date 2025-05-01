@@ -15,13 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.sm.domain.Class;
-import com.myproject.sm.domain.Subject;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.service.ClassService;
 import com.myproject.sm.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
-
-import jakarta.validation.Valid;
 
 @RestController
 public class ClassController {
@@ -33,18 +30,15 @@ public class ClassController {
     }
 
     @PostMapping("/classes")
-    public ResponseEntity<Class> createStudent(@Valid @RequestBody Class reqClass) throws IdInvalidException {
+    public ResponseEntity<Class> createClass(@RequestBody Class reqClass) throws IdInvalidException {
         if (this.classService.isExistByName(reqClass.getName())) {
             throw new IdInvalidException("Lớp học với tên " + reqClass.getName() + " đã tồn tại");
         }
-
-        Class newClass = this.classService.handleCreateClass(reqClass);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(newClass);
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.classService.handleCreateClass(reqClass));
     }
 
     @GetMapping("/classes")
-    public ResponseEntity<ResultPaginationDTO> fetchAllSubjects(
+    public ResponseEntity<ResultPaginationDTO> fetchAllClasses(
             @Filter Specification<Class> spec,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
