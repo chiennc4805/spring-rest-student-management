@@ -74,21 +74,23 @@ public class StudentService {
         Student student = this.studentRepository.save(this.convertStudentDTOtoStudent(reqStudentDTO));
         reqStudentDTO.setId(student.getId());
 
-        ClassEnrollment classEnrollment = new ClassEnrollment();
+        List<ClassEnrollment> classEnrollments = new ArrayList<>();
         List<Class> classes = new ArrayList<>();
         for (Class cl : reqStudentDTO.getClasses()) {
             Class classDB = this.classService.handleFetchClassById(cl.getId());
             if (classDB != null) {
                 // save in ClassEnrollment table
+                ClassEnrollment classEnrollment = new ClassEnrollment();
                 classEnrollment.setEnrollmentStudent(student);
                 classEnrollment.setEnrollmentClass(classDB);
-                this.classEnrollmentService.handleCreateClassEnrollment(classEnrollment);
+                classEnrollment = this.classEnrollmentService.handleCreateClassEnrollment(classEnrollment);
 
                 // save in list class of studentDTO
                 classes.add(classDB);
+                // save in list classEnrollment to set for student
+                classEnrollments.add(classEnrollment);
             }
         }
-
         reqStudentDTO.setClasses(classes);
 
         return reqStudentDTO;
@@ -134,13 +136,13 @@ public class StudentService {
         // update ClassEnrollment
         this.classEnrollmentService.deleteClassEnrollment(student);
 
-        ClassEnrollment classEnrollment = new ClassEnrollment();
         List<Class> classes = new ArrayList<>();
         if (reqStudentDTO.getClasses() != null && !reqStudentDTO.getClasses().isEmpty()) {
             for (Class cl : reqStudentDTO.getClasses()) {
                 Class classDB = this.classService.handleFetchClassById(cl.getId());
                 if (classDB != null) {
                     // save in ClassEnrollment table
+                    ClassEnrollment classEnrollment = new ClassEnrollment();
                     classEnrollment.setEnrollmentStudent(student);
                     classEnrollment.setEnrollmentClass(classDB);
                     this.classEnrollmentService.handleCreateClassEnrollment(classEnrollment);

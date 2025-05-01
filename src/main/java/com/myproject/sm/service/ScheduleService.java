@@ -134,4 +134,8 @@ public class ScheduleService {
         return Arrays.asList(slot1, slot2, slot3);
     }
 
+    public boolean isExistBySlotNumberAndClass(int slotNumber, Class classInfo) {
+        return this.scheduleRepository.existsBySlotNumberAndClassInfo(slotNumber, classInfo);
+    }
+
 }
