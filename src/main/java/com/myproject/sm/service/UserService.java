@@ -26,7 +26,7 @@ public class UserService {
 
     public User handleCreateUser(User user) {
         if (user.getRole() != null) {
-            Role role = this.roleService.fetchRoleById(user.getRole().getId());
+            Role role = this.roleService.handleFetchRoleById(user.getRole().getId());
             user.setRole(role);
         }
         return this.userRepository.save(user);
@@ -43,7 +43,7 @@ public class UserService {
 
             // check role
             if (reqUser.getRole() != null) {
-                Role role = roleService.fetchRoleById(reqUser.getRole().getId());
+                Role role = roleService.handleFetchRoleById(reqUser.getRole().getId());
                 userDB.setRole(role != null ? role : null);
             }
 
