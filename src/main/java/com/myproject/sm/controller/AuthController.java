@@ -117,7 +117,7 @@ public class AuthController {
         Jwt decodedToken = this.securityUtil.checkValidRefreshToken(refresh_token);
         String username = decodedToken.getSubject();
 
-        // check user by token + email
+        // check user by token + username
         User currentUser = this.userService.getUserByRefreshTokenAndUsername(refresh_token, username);
         if (currentUser == null) {
             throw new IdInvalidException("Refresh Token không hợp lệ");
