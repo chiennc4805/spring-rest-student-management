@@ -1,5 +1,6 @@
 package com.myproject.sm.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,16 +9,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.myproject.sm.domain.Parent;
+import com.myproject.sm.domain.Campus;
+import com.myproject.sm.domain.Class;
 import com.myproject.sm.domain.Subject;
 import com.myproject.sm.domain.Teacher;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO.Meta;
-import com.myproject.sm.domain.Campus;
-import com.myproject.sm.domain.Class;
-import com.myproject.sm.domain.Class;
 import com.myproject.sm.repository.ClassRepository;
-import com.myproject.sm.repository.StudentRepository;
 
 @Service
 public class ClassService {
@@ -58,11 +56,15 @@ public class ClassService {
         return this.classRepository.save(reqClass);
     }
 
-    public ResultPaginationDTO handleFetchAllClasses() {
-        List<Class> classes = this.classRepository.findAll();
+    public ResultPaginationDTO handleFetchAllClasses(Specification<Class> spec) {
+        List<Class> classes = this.classRepository.findAll(spec) != null ? this.classRepository.findAll(spec)
+                : new ArrayList<>();
         ResultPaginationDTO res = new ResultPaginationDTO();
+        Meta meta = new ResultPaginationDTO.Meta();
 
-        res.setMeta(null);
+        meta.setTotal(classes.size());
+
+        res.setMeta(meta);
         res.setResult(classes);
 
         return res;

@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.sm.domain.Class;
+import com.myproject.sm.domain.Teacher;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.service.ClassService;
+import com.myproject.sm.service.TeacherService;
 import com.myproject.sm.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
 
@@ -24,15 +26,22 @@ import com.turkraft.springfilter.boot.Filter;
 public class ClassController {
 
     private final ClassService classService;
+    private final TeacherService teacherService;
 
-    public ClassController(ClassService classService) {
+    public ClassController(ClassService classService, TeacherService teacherService) {
         this.classService = classService;
+        this.teacherService = teacherService;
     }
 
     @PostMapping("/classes")
     public ResponseEntity<Class> createClass(@RequestBody Class reqClass) throws IdInvalidException {
         if (this.classService.isExistByName(reqClass.getName())) {
             throw new IdInvalidException("Lớp học với tên " + reqClass.getName() + " đã tồn tại");
+        }
+        Teacher teacher = this.teacherService.handleFetchTeacherByTelephone(reqClass.getTeacher().getTelephone());
+        if (teacher == null) {
+            throw new IdInvalidException(
+                    "Giáo viên với số điện thoại " + reqClass.getTeacher().getTelephone() + " không tồn tại");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(this.classService.handleCreateClass(reqClass));
     }
@@ -44,7 +53,7 @@ public class ClassController {
             @RequestParam(required = false) Integer size) {
 
         if (page == null && size == null) {
-            return ResponseEntity.ok(this.classService.handleFetchAllClasses());
+            return ResponseEntity.ok(this.classService.handleFetchAllClasses(spec));
         } else {
             Pageable pageable = PageRequest.of(page - 1, size);
             return ResponseEntity.ok(this.classService.handleFetchAllClasses(spec, pageable));

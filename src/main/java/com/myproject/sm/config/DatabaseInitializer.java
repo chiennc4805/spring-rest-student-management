@@ -2,24 +2,33 @@ package com.myproject.sm.config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.myproject.sm.domain.Permission;
 import com.myproject.sm.domain.Role;
+import com.myproject.sm.domain.User;
 import com.myproject.sm.repository.PermissionRepository;
 import com.myproject.sm.repository.RoleRepository;
+import com.myproject.sm.repository.UserRepository;
 
 @Service
 public class DatabaseInitializer implements CommandLineRunner {
 
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public DatabaseInitializer(RoleRepository roleRepository, PermissionRepository permissionRepository) {
+    public DatabaseInitializer(RoleRepository roleRepository, PermissionRepository permissionRepository,
+            UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -28,6 +37,7 @@ public class DatabaseInitializer implements CommandLineRunner {
 
         long countRole = this.roleRepository.count();
         long countPermission = this.permissionRepository.count();
+        long countUser = this.userRepository.count();
 
         if (countPermission == 0) {
             ArrayList<Permission> permissions = new ArrayList<>();
@@ -128,7 +138,22 @@ public class DatabaseInitializer implements CommandLineRunner {
             this.roleRepository.saveAll(roles);
         }
 
-        if (countRole > 0 && countPermission > 0) {
+        if (countUser == 0) {
+            User adminUser = new User();
+            adminUser.setName("I'm super admin");
+            adminUser.setUsername("admin@gmail.com");
+            adminUser.setPassword(this.passwordEncoder.encode("123456"));
+
+            Optional<Role> roleOptional = this.roleRepository.findByName("SUPER_ADMIN");
+            Role adminRole = roleOptional.isPresent() ? roleOptional.get() : null;
+            if (adminRole != null) {
+                adminUser.setRole(adminRole);
+            }
+
+            this.userRepository.save(adminUser);
+        }
+
+        if (countRole > 0 && countPermission > 0 && countUser > 0) {
             System.out.println(">>> SKIP INIT DATABASE ~ ALREADY HAVE DATA...");
         } else
             System.out.println(">>> END INIT DATABASE");

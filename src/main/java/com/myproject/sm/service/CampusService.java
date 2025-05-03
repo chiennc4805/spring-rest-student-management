@@ -9,7 +9,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.myproject.sm.domain.Campus;
-import com.myproject.sm.domain.Subject;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO.Meta;
 import com.myproject.sm.repository.CampusRepository;
@@ -28,6 +27,7 @@ public class CampusService {
     }
 
     public ResultPaginationDTO fetchAllCampus() {
+        // List<Campus> campus = this.campusRepository.findAll(spec);
         List<Campus> campus = this.campusRepository.findAll();
         ResultPaginationDTO res = new ResultPaginationDTO();
 

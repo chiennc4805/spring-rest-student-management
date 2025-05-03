@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.sm.domain.Campus;
-import com.myproject.sm.domain.Subject;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.service.CampusService;
 import com.myproject.sm.util.error.IdInvalidException;
