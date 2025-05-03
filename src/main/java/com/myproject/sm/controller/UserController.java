@@ -69,7 +69,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<ResultPaginationDTO> fetchAllStudents(
+    public ResponseEntity<ResultPaginationDTO> fetchAllUsers(
             @Filter Specification<User> spec,
             Pageable pageable) {
 
