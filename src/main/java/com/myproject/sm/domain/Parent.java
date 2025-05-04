@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.annotations.UuidGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
@@ -45,6 +46,7 @@ public class Parent {
 
     @OneToOne()
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @PreRemove

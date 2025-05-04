@@ -3,6 +3,8 @@ package com.myproject.sm.domain.dto;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.myproject.sm.domain.Class;
 import com.myproject.sm.domain.Parent;
 
@@ -21,8 +23,14 @@ public class StudentDTO {
 
     private LocalDate birthDate;
 
+    private double height;
+
+    private double weight;
+
+    @JsonIgnoreProperties("students")
     private Parent parent;
 
+    @JsonIncludeProperties({ "id", "name" })
     private List<Class> classes;
 
 }

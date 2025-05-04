@@ -42,6 +42,8 @@ public class StudentService {
         student.setBirthDate(studentDTO.getBirthDate());
         student.setGender(studentDTO.getGender());
         student.setName(studentDTO.getName());
+        student.setWeight(studentDTO.getWeight());
+        student.setHeight(studentDTO.getHeight());
         student.setParent(studentDTO.getParent());
 
         return student;
@@ -53,6 +55,8 @@ public class StudentService {
         studentDTO.setBirthDate(student.getBirthDate());
         studentDTO.setGender(student.getGender());
         studentDTO.setName(student.getName());
+        studentDTO.setWeight(student.getWeight());
+        studentDTO.setHeight(student.getHeight());
         studentDTO.setParent(student.getParent());
 
         List<Class> classes = student.getClassEnrollments().stream().map(c -> c.getEnrollmentClass())
@@ -66,7 +70,7 @@ public class StudentService {
     public StudentDTO handleCreateStudent(StudentDTO reqStudentDTO) {
         // check parent valid
         if (reqStudentDTO.getParent() != null) {
-            Parent parent = this.parentService.fetchParentById(reqStudentDTO.getParent().getId());
+            Parent parent = this.parentService.fetchParentByTelephone(reqStudentDTO.getParent().getTelephone());
             reqStudentDTO.setParent(parent);
         }
 
@@ -124,7 +128,7 @@ public class StudentService {
     public StudentDTO handleUpdateStudent(StudentDTO reqStudentDTO) {
         // check parent valid
         if (reqStudentDTO.getParent() != null) {
-            Parent parent = this.parentService.fetchParentById(reqStudentDTO.getParent().getId());
+            Parent parent = this.parentService.fetchParentByTelephone(reqStudentDTO.getParent().getTelephone());
             reqStudentDTO.setParent(parent);
         }
 

@@ -38,8 +38,8 @@ public class ClassController {
         if (this.classService.isExistByName(reqClass.getName())) {
             throw new IdInvalidException("Lớp học với tên " + reqClass.getName() + " đã tồn tại");
         }
-        Teacher teacher = this.teacherService.handleFetchTeacherByTelephone(reqClass.getTeacher().getTelephone());
-        if (teacher == null) {
+        boolean isExistTeacher = this.teacherService.isExistByTelephone(reqClass.getTeacher().getTelephone());
+        if (!isExistTeacher) {
             throw new IdInvalidException(
                     "Giáo viên với số điện thoại " + reqClass.getTeacher().getTelephone() + " không tồn tại");
         }
@@ -61,7 +61,7 @@ public class ClassController {
     }
 
     @GetMapping("/classes/{id}")
-    public ResponseEntity<Class> fetchStudentById(@PathVariable("id") String id) throws IdInvalidException {
+    public ResponseEntity<Class> fetchClassById(@PathVariable("id") String id) throws IdInvalidException {
         Class classDB = this.classService.handleFetchClassById(id);
         if (classDB == null) {
             throw new IdInvalidException("Class with id = " + id + " không tồn tại");
@@ -70,13 +70,18 @@ public class ClassController {
     }
 
     @PutMapping("/classes")
-    public ResponseEntity<Class> updateStudent(@RequestBody Class reqClass) throws IdInvalidException {
+    public ResponseEntity<Class> updateClass(@RequestBody Class reqClass) throws IdInvalidException {
         Class classDB = this.classService.handleFetchClassById(reqClass.getId());
         if (classDB == null) {
             throw new IdInvalidException("Class with id = " + reqClass.getId() + " không tồn tại");
         }
         if (!reqClass.getName().equals(classDB.getName()) && this.classService.isExistByName(reqClass.getName())) {
             throw new IdInvalidException("Lớp học với tên " + reqClass.getName() + " đã tồn tại");
+        }
+        boolean isExistTeacher = this.teacherService.isExistByTelephone(reqClass.getTeacher().getTelephone());
+        if (!isExistTeacher) {
+            throw new IdInvalidException(
+                    "Giáo viên với số điện thoại " + reqClass.getTeacher().getTelephone() + " không tồn tại");
         }
 
         Class updatedStudent = this.classService.handleUpdateClass(reqClass);
@@ -85,7 +90,7 @@ public class ClassController {
     }
 
     @DeleteMapping("/classes/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable("id") String id) throws IdInvalidException {
+    public ResponseEntity<Void> deleteClass(@PathVariable("id") String id) throws IdInvalidException {
         Class classDB = this.classService.handleFetchClassById(id);
         if (classDB == null) {
             throw new IdInvalidException("Class with id = " + id + " không tồn tại");

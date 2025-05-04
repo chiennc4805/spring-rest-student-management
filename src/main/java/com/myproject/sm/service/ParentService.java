@@ -68,6 +68,12 @@ public class ParentService {
         return p;
     }
 
+    public Parent fetchParentByTelephone(String telephone) {
+        Optional<Parent> parentOptional = this.parentRepository.findByTelephone(telephone);
+        Parent p = parentOptional.isPresent() ? parentOptional.get() : null;
+        return p;
+    }
+
     public Parent updateParent(Parent reqParent) {
         Parent parentDB = this.fetchParentById(reqParent.getId());
         // update Parent
