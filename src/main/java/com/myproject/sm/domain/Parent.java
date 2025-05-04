@@ -3,7 +3,6 @@ package com.myproject.sm.domain;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.UuidGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -29,19 +28,15 @@ public class Parent {
     @UuidGenerator
     private String id;
 
-    @Nationalized
     private String name;
     private Boolean gender;
     private LocalDate birthDate;
     private String telephone;
 
-    @Nationalized
     private String address;
 
-    @Nationalized
     private String zaloName;
 
-    @Nationalized
     private String facebookName;
 
     @OneToMany(mappedBy = "parent", orphanRemoval = true, cascade = { CascadeType.PERSIST })

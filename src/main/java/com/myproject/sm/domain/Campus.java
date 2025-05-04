@@ -2,7 +2,6 @@ package com.myproject.sm.domain;
 
 import java.util.List;
 
-import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.UuidGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,10 +25,9 @@ public class Campus {
     @UuidGenerator
     private String id;
 
-    @Nationalized
     private String name;
 
-    @Column(columnDefinition = "nvarchar(max)")
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String address;
 
     @OneToMany(mappedBy = "campus")

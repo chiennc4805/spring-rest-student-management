@@ -36,13 +36,10 @@ public class Student {
     private String id;
 
     @NotBlank(message = "Name không được để trống")
-    @Nationalized
     private String name;
 
-    // @NotBlank(message = "Gender không được để trống")
     private Boolean gender;
 
-    // @NotNull(message = "BirthDate không được để trống")
     private LocalDate birthDate;
 
     @ManyToOne()

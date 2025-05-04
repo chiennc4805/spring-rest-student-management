@@ -1,6 +1,5 @@
 package com.myproject.sm.domain;
 
-import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.UuidGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -27,10 +26,9 @@ public class User {
     private String username;
     private String password;
 
-    @Nationalized
     private String name;
 
-    @Column(columnDefinition = "varchar(max)")
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String refreshToken;
 
     @ManyToOne()

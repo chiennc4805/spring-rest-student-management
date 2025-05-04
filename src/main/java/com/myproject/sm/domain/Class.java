@@ -3,7 +3,6 @@ package com.myproject.sm.domain;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.UuidGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
@@ -27,7 +26,6 @@ public class Class {
     @UuidGenerator
     private String id;
 
-    @Nationalized
     private String name;
 
     @ManyToOne

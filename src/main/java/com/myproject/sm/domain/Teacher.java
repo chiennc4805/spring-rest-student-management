@@ -40,13 +40,10 @@ public class Teacher {
 
     private String telephone;
 
-    @Nationalized
     private String address;
 
-    @Nationalized
     private String zaloName;
 
-    @Nationalized
     private String facebookName;
 
     @ManyToMany

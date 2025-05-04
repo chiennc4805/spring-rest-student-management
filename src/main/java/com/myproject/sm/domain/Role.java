@@ -2,12 +2,12 @@ package com.myproject.sm.domain;
 
 import java.util.List;
 
-import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.UuidGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -38,11 +38,10 @@ public class Role {
     private String id;
 
     @NotBlank(message = "Name không được để trống")
-    @Nationalized
     private String name;
 
     @NotBlank(message = "Description không được để trống")
-    @Nationalized
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String description;
 
     private boolean active;
