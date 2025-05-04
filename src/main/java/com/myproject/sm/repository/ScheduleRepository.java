@@ -14,7 +14,7 @@ import com.myproject.sm.domain.Schedule;
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, String>, JpaSpecificationExecutor<Schedule> {
 
-    @Query(value = "SELECT s FROM Schedule s JOIN s.classInfo c WHERE c.openDay <= ?1")
+    @Query(value = "SELECT s FROM Schedule s JOIN s.classInfo c")
     List<Schedule> findByDateInWeek(LocalDate date);
 
     boolean existsBySlotNumberAndClassInfo(int slotNumber, Class classInfo);

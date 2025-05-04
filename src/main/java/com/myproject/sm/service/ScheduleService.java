@@ -91,38 +91,30 @@ public class ScheduleService {
                 for (int weekday : s.getWeekdayList()) {
                     switch (weekday) {
                         case 2:
-                            if (s.getClassInfo().getOpenDay().isBefore(startDate))
-                                targetSlot.getMonday().add(s.getClassInfo());
+                            targetSlot.getMonday().add(s.getClassInfo());
                             break;
                         case 3:
-                            if (s.getClassInfo().getOpenDay().isBefore(startDate.plusDays(1))
-                                    || s.getClassInfo().getOpenDay().isEqual(startDate.plusDays(1)))
-                                targetSlot.getTuesday().add(s.getClassInfo());
+                            targetSlot.getTuesday().add(s.getClassInfo());
                             break;
                         case 4:
-                            if (s.getClassInfo().getOpenDay().isBefore(startDate.plusDays(2))
-                                    || s.getClassInfo().getOpenDay().isEqual(startDate.plusDays(2)))
-                                targetSlot.getWednesday().add(s.getClassInfo());
+
+                            targetSlot.getWednesday().add(s.getClassInfo());
                             break;
                         case 5:
-                            if (s.getClassInfo().getOpenDay().isBefore(startDate.plusDays(3))
-                                    || s.getClassInfo().getOpenDay().isEqual(startDate.plusDays(3)))
-                                targetSlot.getThursday().add(s.getClassInfo());
+
+                            targetSlot.getThursday().add(s.getClassInfo());
                             break;
                         case 6:
-                            if (s.getClassInfo().getOpenDay().isBefore(startDate.plusDays(4))
-                                    || s.getClassInfo().getOpenDay().isEqual(startDate.plusDays(4)))
-                                targetSlot.getFriday().add(s.getClassInfo());
+
+                            targetSlot.getFriday().add(s.getClassInfo());
                             break;
                         case 7:
-                            if (s.getClassInfo().getOpenDay().isBefore(startDate.plusDays(5))
-                                    || s.getClassInfo().getOpenDay().isEqual(startDate.plusDays(5)))
-                                targetSlot.getSaturday().add(s.getClassInfo());
+
+                            targetSlot.getSaturday().add(s.getClassInfo());
                             break;
                         case 1:
-                            if (s.getClassInfo().getOpenDay().isBefore(startDate.plusDays(6))
-                                    || s.getClassInfo().getOpenDay().isEqual(startDate.plusDays(6)))
-                                targetSlot.getSunday().add(s.getClassInfo());
+
+                            targetSlot.getSunday().add(s.getClassInfo());
                             break;
                         default:
                             break;

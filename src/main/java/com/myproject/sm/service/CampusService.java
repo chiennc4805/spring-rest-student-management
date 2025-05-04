@@ -30,8 +30,11 @@ public class CampusService {
         // List<Campus> campus = this.campusRepository.findAll(spec);
         List<Campus> campus = this.campusRepository.findAll();
         ResultPaginationDTO res = new ResultPaginationDTO();
+        Meta mt = new ResultPaginationDTO.Meta();
 
-        res.setMeta(null);
+        mt.setTotal(campus.size());
+
+        res.setMeta(mt);
         res.setResult(campus);
 
         return res;

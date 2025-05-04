@@ -1,6 +1,5 @@
 package com.myproject.sm.domain;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.hibernate.annotations.UuidGenerator;
@@ -42,8 +41,6 @@ public class Class {
     @JoinColumn(name = "teacher_id")
     @JsonIncludeProperties({ "id", "name", "telephone" })
     private Teacher teacher;
-
-    private LocalDate openDay;
 
     @OneToMany(mappedBy = "classInfo")
     @JsonIncludeProperties("id")
