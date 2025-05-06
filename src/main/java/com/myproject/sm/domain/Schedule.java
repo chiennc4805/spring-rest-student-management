@@ -9,7 +9,8 @@ import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PreRemove;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,13 +23,16 @@ public class Schedule {
     @UuidGenerator
     private String id;
 
-    private int slotNumber;
-
     private List<Integer> weekdayList;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "class_id")
     @JsonIncludeProperties({ "id", "name" })
     private Class classInfo;
+
+    @PreRemove
+    public void handleBeforeDelete() {
+        this.classInfo.setSchedule(null);
+    }
 
 }

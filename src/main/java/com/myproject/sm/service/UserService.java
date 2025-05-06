@@ -39,19 +39,18 @@ public class UserService {
 
     public User handleUpdateUser(User reqUser) {
         User userDB = this.fetchUserById(reqUser.getId());
-        if (userDB != null) {
-
-            // check role
-            if (reqUser.getRole() != null) {
-                Role role = roleService.handleFetchRoleById(reqUser.getRole().getId());
-                userDB.setRole(role != null ? role : null);
-            }
-
+        // check role
+        if (reqUser.getPassword() == null) {
+            reqUser.setPassword(userDB.getPassword());
         }
-
-        // update
-        userDB = this.userRepository.save(userDB);
-        return userDB;
+        if (reqUser.getUsername() == null) {
+            reqUser.setUsername(userDB.getUsername());
+        }
+        if (reqUser.getRole() != null) {
+            Role role = roleService.handleFetchRoleById(reqUser.getRole().getId());
+            reqUser.setRole(role != null ? role : null);
+        }
+        return this.userRepository.save(reqUser);
     }
 
     public void handleDeleteUser(String id) {

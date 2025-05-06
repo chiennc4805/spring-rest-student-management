@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myproject.sm.domain.Class;
 import com.myproject.sm.domain.Schedule;
 import com.myproject.sm.domain.dto.response.ResScheduleDTO;
 import com.myproject.sm.service.ClassService;
@@ -36,11 +35,15 @@ public class ScheduleController {
 
     @PostMapping("/schedule")
     public ResponseEntity<Schedule> createSchedule(@Valid @RequestBody Schedule reqSchedule) throws IdInvalidException {
-        Class classInfo = this.classService.handleFetchClassById(reqSchedule.getClassInfo().getId());
-        if (this.scheduleService.isExistBySlotNumberAndClass(reqSchedule.getSlotNumber(), reqSchedule.getClassInfo())) {
-            throw new IdInvalidException("Class " + classInfo.getName() + " đã có lịch chứa ca học "
-                    + reqSchedule.getSlotNumber());
-        }
+        // Class classInfo =
+        // this.classService.handleFetchClassById(reqSchedule.getClassInfo().getId());
+        // if
+        // (this.scheduleService.isExistBySlotNumberAndClass(reqSchedule.getSlotNumber(),
+        // reqSchedule.getClassInfo())) {
+        // throw new IdInvalidException("Class " + classInfo.getName() + " đã có lịch
+        // chứa ca học "
+        // + reqSchedule.getSlotNumber());
+        // }
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(this.scheduleService.handleCreateAndUpdateSchedule(reqSchedule));
     }
@@ -58,11 +61,14 @@ public class ScheduleController {
         if (scheduleDB == null) {
             throw new IdInvalidException("Schedule with id = " + reqSchedule.getId() + " không tồn tại");
         }
-        if (this.scheduleService.isExistBySlotNumberAndClass(reqSchedule.getSlotNumber(), reqSchedule.getClassInfo())
-                && reqSchedule.getSlotNumber() != reqSchedule.getSlotNumber()) {
-            throw new IdInvalidException("Class " + reqSchedule.getClassInfo().getName() + " đã có lịch chứa ca học "
-                    + reqSchedule.getSlotNumber());
-        }
+        // if
+        // (this.scheduleService.isExistBySlotNumberAndClass(reqSchedule.getSlotNumber(),
+        // reqSchedule.getClassInfo())
+        // && reqSchedule.getSlotNumber() != reqSchedule.getSlotNumber()) {
+        // throw new IdInvalidException("Class " + reqSchedule.getClassInfo().getName()
+        // + " đã có lịch chứa ca học "
+        // + reqSchedule.getSlotNumber());
+        // }
         // update
         Schedule updatedSchedule = this.scheduleService.handleCreateAndUpdateSchedule(reqSchedule);
 

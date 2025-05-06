@@ -8,11 +8,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.myproject.sm.domain.Campus;
 import com.myproject.sm.domain.Permission;
 import com.myproject.sm.domain.Role;
 import com.myproject.sm.domain.User;
+import com.myproject.sm.repository.CampusRepository;
 import com.myproject.sm.repository.PermissionRepository;
 import com.myproject.sm.repository.RoleRepository;
+import com.myproject.sm.repository.SubjectRepository;
 import com.myproject.sm.repository.UserRepository;
 
 @Service
@@ -22,13 +25,18 @@ public class DatabaseInitializer implements CommandLineRunner {
     private final PermissionRepository permissionRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CampusRepository campusRepository;
+    private final SubjectRepository subjectRepository;
 
     public DatabaseInitializer(RoleRepository roleRepository, PermissionRepository permissionRepository,
-            UserRepository userRepository, PasswordEncoder passwordEncoder) {
+            UserRepository userRepository, PasswordEncoder passwordEncoder, CampusRepository campusRepository,
+            SubjectRepository subjectRepository) {
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.campusRepository = campusRepository;
+        this.subjectRepository = subjectRepository;
     }
 
     @Override
@@ -38,6 +46,18 @@ public class DatabaseInitializer implements CommandLineRunner {
         long countRole = this.roleRepository.count();
         long countPermission = this.permissionRepository.count();
         long countUser = this.userRepository.count();
+        long countCampus = this.campusRepository.count();
+        long countSubject = this.subjectRepository.count();
+
+        if (countCampus == 0) {
+            List<Campus> campus = new ArrayList<>();
+            campus.add(new Campus("Eco Home", "số 1, ngõ 1, phường Tân Xuân"));
+            campus.add(new Campus("Xuân La", "Số 2, ngõ 2, phường Xuân La"));
+            campus.add(new Campus("Xuân Đỉnh", "số 1, ngõ 1, phường Xuân Đỉnh"));
+            campus.add(new Campus("Ngoại Giao Đoàn", "khu Ngoại Giao Đoàn, Xuân Đỉnh"));
+
+            this.campusRepository.saveAll(campus);
+        }
 
         if (countPermission == 0) {
             ArrayList<Permission> permissions = new ArrayList<>();
@@ -153,7 +173,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             this.userRepository.save(adminUser);
         }
 
-        if (countRole > 0 && countPermission > 0 && countUser > 0) {
+        if (countRole > 0 && countPermission > 0 && countUser > 0 && countCampus > 0) {
             System.out.println(">>> SKIP INIT DATABASE ~ ALREADY HAVE DATA...");
         } else
             System.out.println(">>> END INIT DATABASE");

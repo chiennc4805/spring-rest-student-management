@@ -3,6 +3,7 @@ package com.myproject.sm.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,8 +12,10 @@ import org.springframework.stereotype.Service;
 
 import com.myproject.sm.domain.Campus;
 import com.myproject.sm.domain.Class;
+import com.myproject.sm.domain.Student;
 import com.myproject.sm.domain.Subject;
 import com.myproject.sm.domain.Teacher;
+import com.myproject.sm.domain.dto.ClassDTO;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO.Meta;
 import com.myproject.sm.repository.ClassRepository;
@@ -35,12 +38,25 @@ public class ClassService {
         this.teacherService = teacherService;
     }
 
+    public ClassDTO convertClassToClassDTO(Class classInfo) {
+        ClassDTO classDTO = new ClassDTO();
+
+        classDTO.setId(classInfo.getId());
+        classDTO.setName(classInfo.getName());
+        classDTO.setSubject(classInfo.getSubject());
+        classDTO.setCampus(classInfo.getCampus());
+        classDTO.setTeacher(classInfo.getTeacher());
+        classDTO.setSchedule(classInfo.getSchedule());
+
+        List<Student> students = classInfo.getClassEnrollments().stream().map(c -> c.getEnrollmentStudent())
+                .collect(Collectors.toList());
+
+        classDTO.setStudents(students);
+
+        return classDTO;
+    }
+
     public Class handleCreateClass(Class reqClass) {
-        // if (reqClass.getTeacher() != null) {
-        // Teacher teacher =
-        // this.teacherService.handleFetchTeacherById(reqClass.getTeacher().getId());
-        // reqClass.setTeacher(teacher);
-        // }
         if (reqClass.getTeacher() != null) {
             Teacher teacher = this.teacherService.handleFetchTeacherByTelephone(reqClass.getTeacher().getTelephone());
             reqClass.setTeacher(teacher);
@@ -65,7 +81,10 @@ public class ClassService {
         meta.setTotal(classes.size());
 
         res.setMeta(meta);
-        res.setResult(classes);
+        List<ClassDTO> classDTOs = classes.stream().map(this::convertClassToClassDTO)
+                .collect(Collectors.toList());
+
+        res.setResult(classDTOs);
 
         return res;
     }
@@ -81,23 +100,28 @@ public class ClassService {
         mt.setTotal(pageClass.getTotalElements());
 
         res.setMeta(mt);
-        res.setResult(pageClass.getContent());
+
+        List<ClassDTO> classDTOs = pageClass.getContent().stream().map(this::convertClassToClassDTO)
+                .collect(Collectors.toList());
+
+        res.setResult(classDTOs);
 
         return res;
     }
 
     public Class handleFetchClassById(String id) {
-        Optional<Class> studentOptional = this.classRepository.findById(id);
-        Class c = studentOptional.isPresent() ? studentOptional.get() : null;
+        Optional<Class> classOptional = this.classRepository.findById(id);
+        Class c = classOptional.isPresent() ? classOptional.get() : null;
+        return c;
+    }
+
+    public Class handleFetchClassByName(String name) {
+        Optional<Class> classOptional = this.classRepository.findByName(name);
+        Class c = classOptional.isPresent() ? classOptional.get() : null;
         return c;
     }
 
     public Class handleUpdateClass(Class reqClass) {
-        // if (reqClass.getTeacher() != null) {
-        // Teacher teacher =
-        // this.teacherService.handleFetchTeacherById(reqClass.getTeacher().getId());
-        // reqClass.setTeacher(teacher);
-        // }
         if (reqClass.getTeacher() != null) {
             Teacher teacher = this.teacherService.handleFetchTeacherByTelephone(reqClass.getTeacher().getTelephone());
             reqClass.setTeacher(teacher);

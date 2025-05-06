@@ -1,8 +1,6 @@
 package com.myproject.sm.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,92 +40,90 @@ public class ScheduleService {
     }
 
     public List<ResScheduleDTO> handleFetchScheduleInWeek(LocalDate startDate) {
-        List<Schedule> schedules = this.scheduleRepository.findByDateInWeek(startDate.plusDays(6));
+        // List<Schedule> schedules =
+        // this.scheduleRepository.findByDateInWeek(startDate.plusDays(6));
 
-        ResScheduleDTO slot1 = new ResScheduleDTO();
-        slot1.setSlot("Slot 1");
-        slot1.setMonday(new ArrayList<>());
-        slot1.setTuesday(new ArrayList<>());
-        slot1.setWednesday(new ArrayList<>());
-        slot1.setThursday(new ArrayList<>());
-        slot1.setFriday(new ArrayList<>());
-        slot1.setSaturday(new ArrayList<>());
-        slot1.setSunday(new ArrayList<>());
+        // ResScheduleDTO slot1 = new ResScheduleDTO();
+        // slot1.setSlot("Slot 1");
+        // slot1.setMonday(new ArrayList<>());
+        // slot1.setTuesday(new ArrayList<>());
+        // slot1.setWednesday(new ArrayList<>());
+        // slot1.setThursday(new ArrayList<>());
+        // slot1.setFriday(new ArrayList<>());
+        // slot1.setSaturday(new ArrayList<>());
+        // slot1.setSunday(new ArrayList<>());
 
-        ResScheduleDTO slot2 = new ResScheduleDTO();
-        slot2.setSlot("Slot 2");
-        slot2.setMonday(new ArrayList<>());
-        slot2.setTuesday(new ArrayList<>());
-        slot2.setWednesday(new ArrayList<>());
-        slot2.setThursday(new ArrayList<>());
-        slot2.setFriday(new ArrayList<>());
-        slot2.setSaturday(new ArrayList<>());
-        slot2.setSunday(new ArrayList<>());
+        // ResScheduleDTO slot2 = new ResScheduleDTO();
+        // slot2.setSlot("Slot 2");
+        // slot2.setMonday(new ArrayList<>());
+        // slot2.setTuesday(new ArrayList<>());
+        // slot2.setWednesday(new ArrayList<>());
+        // slot2.setThursday(new ArrayList<>());
+        // slot2.setFriday(new ArrayList<>());
+        // slot2.setSaturday(new ArrayList<>());
+        // slot2.setSunday(new ArrayList<>());
 
-        ResScheduleDTO slot3 = new ResScheduleDTO();
-        slot3.setSlot("Slot 3");
-        slot3.setMonday(new ArrayList<>());
-        slot3.setTuesday(new ArrayList<>());
-        slot3.setWednesday(new ArrayList<>());
-        slot3.setThursday(new ArrayList<>());
-        slot3.setFriday(new ArrayList<>());
-        slot3.setSaturday(new ArrayList<>());
-        slot3.setSunday(new ArrayList<>());
+        // ResScheduleDTO slot3 = new ResScheduleDTO();
+        // slot3.setSlot("Slot 3");
+        // slot3.setMonday(new ArrayList<>());
+        // slot3.setTuesday(new ArrayList<>());
+        // slot3.setWednesday(new ArrayList<>());
+        // slot3.setThursday(new ArrayList<>());
+        // slot3.setFriday(new ArrayList<>());
+        // slot3.setSaturday(new ArrayList<>());
+        // slot3.setSunday(new ArrayList<>());
 
-        // Phân loại các Schedule vào từng slot
-        for (Schedule s : schedules) {
-            ResScheduleDTO targetSlot = null;
+        // // Phân loại các Schedule vào từng slot
+        // for (Schedule s : schedules) {
+        // ResScheduleDTO targetSlot = null;
 
-            if (s.getSlotNumber() == 1) {
-                targetSlot = slot1;
-            } else if (s.getSlotNumber() == 2) {
-                targetSlot = slot2;
-            } else if (s.getSlotNumber() == 3) {
-                targetSlot = slot3;
-            }
+        // if (s.getSlotNumber() == 1) {
+        // targetSlot = slot1;
+        // } else if (s.getSlotNumber() == 2) {
+        // targetSlot = slot2;
+        // } else if (s.getSlotNumber() == 3) {
+        // targetSlot = slot3;
+        // }
 
-            if (targetSlot != null) {
-                // Nhóm các ngày trong tuần của slot
-                for (int weekday : s.getWeekdayList()) {
-                    switch (weekday) {
-                        case 2:
-                            targetSlot.getMonday().add(s.getClassInfo());
-                            break;
-                        case 3:
-                            targetSlot.getTuesday().add(s.getClassInfo());
-                            break;
-                        case 4:
+        // if (targetSlot != null) {
+        // // Nhóm các ngày trong tuần của slot
+        // for (int weekday : s.getWeekdayList()) {
+        // switch (weekday) {
+        // case 2:
+        // targetSlot.getMonday().add(s.getClassInfo());
+        // break;
+        // case 3:
+        // targetSlot.getTuesday().add(s.getClassInfo());
+        // break;
+        // case 4:
 
-                            targetSlot.getWednesday().add(s.getClassInfo());
-                            break;
-                        case 5:
+        // targetSlot.getWednesday().add(s.getClassInfo());
+        // break;
+        // case 5:
 
-                            targetSlot.getThursday().add(s.getClassInfo());
-                            break;
-                        case 6:
+        // targetSlot.getThursday().add(s.getClassInfo());
+        // break;
+        // case 6:
 
-                            targetSlot.getFriday().add(s.getClassInfo());
-                            break;
-                        case 7:
+        // targetSlot.getFriday().add(s.getClassInfo());
+        // break;
+        // case 7:
 
-                            targetSlot.getSaturday().add(s.getClassInfo());
-                            break;
-                        case 1:
+        // targetSlot.getSaturday().add(s.getClassInfo());
+        // break;
+        // case 1:
 
-                            targetSlot.getSunday().add(s.getClassInfo());
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
+        // targetSlot.getSunday().add(s.getClassInfo());
+        // break;
+        // default:
+        // break;
+        // }
+        // }
+        // }
+        // }
 
-        return Arrays.asList(slot1, slot2, slot3);
-    }
-
-    public boolean isExistBySlotNumberAndClass(int slotNumber, Class classInfo) {
-        return this.scheduleRepository.existsBySlotNumberAndClassInfo(slotNumber, classInfo);
+        // return Arrays.asList(slot1, slot2, slot3);
+        return null;
     }
 
 }

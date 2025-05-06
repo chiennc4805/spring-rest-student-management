@@ -13,13 +13,20 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "campus")
+@NoArgsConstructor
 public class Campus {
+
+    public Campus(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
 
     @Id
     @UuidGenerator

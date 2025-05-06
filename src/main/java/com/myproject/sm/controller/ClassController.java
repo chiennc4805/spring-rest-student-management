@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.sm.domain.Class;
-import com.myproject.sm.domain.Teacher;
+import com.myproject.sm.domain.dto.ClassDTO;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.service.ClassService;
 import com.myproject.sm.service.TeacherService;
@@ -60,20 +60,20 @@ public class ClassController {
         }
     }
 
-    @GetMapping("/classes/{id}")
-    public ResponseEntity<Class> fetchClassById(@PathVariable("id") String id) throws IdInvalidException {
-        Class classDB = this.classService.handleFetchClassById(id);
+    @GetMapping("/classes/{name}")
+    public ResponseEntity<ClassDTO> fetchClassByName(@PathVariable("name") String name) throws IdInvalidException {
+        Class classDB = this.classService.handleFetchClassByName(name);
         if (classDB == null) {
-            throw new IdInvalidException("Class with id = " + id + " không tồn tại");
+            throw new IdInvalidException("Class với tên = " + name + " không tồn tại");
         }
-        return ResponseEntity.ok(classDB);
+        return ResponseEntity.ok(this.classService.convertClassToClassDTO(classDB));
     }
 
     @PutMapping("/classes")
     public ResponseEntity<Class> updateClass(@RequestBody Class reqClass) throws IdInvalidException {
         Class classDB = this.classService.handleFetchClassById(reqClass.getId());
         if (classDB == null) {
-            throw new IdInvalidException("Class with id = " + reqClass.getId() + " không tồn tại");
+            throw new IdInvalidException("Class với id = " + reqClass.getId() + " không tồn tại");
         }
         if (!reqClass.getName().equals(classDB.getName()) && this.classService.isExistByName(reqClass.getName())) {
             throw new IdInvalidException("Lớp học với tên " + reqClass.getName() + " đã tồn tại");
@@ -93,7 +93,7 @@ public class ClassController {
     public ResponseEntity<Void> deleteClass(@PathVariable("id") String id) throws IdInvalidException {
         Class classDB = this.classService.handleFetchClassById(id);
         if (classDB == null) {
-            throw new IdInvalidException("Class with id = " + id + " không tồn tại");
+            throw new IdInvalidException("Class với id = " + id + " không tồn tại");
         }
         this.classService.handleDeleteClass(id);
         return ResponseEntity.ok(null);
