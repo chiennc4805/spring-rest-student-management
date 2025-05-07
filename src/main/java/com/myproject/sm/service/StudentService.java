@@ -19,6 +19,8 @@ import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO.Meta;
 import com.myproject.sm.repository.StudentRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class StudentService {
 
@@ -125,6 +127,7 @@ public class StudentService {
         return studentOptional.isPresent() ? this.convertStudentToStudentDTO(studentOptional.get()) : null;
     }
 
+    @Transactional
     public StudentDTO handleUpdateStudent(StudentDTO reqStudentDTO) {
         // check parent valid
         if (reqStudentDTO.getParent() != null) {
@@ -134,30 +137,37 @@ public class StudentService {
 
         Student student = this.convertStudentDTOtoStudent(reqStudentDTO);
 
+        StudentDTO studentRealDTO = this.convertStudentToStudentDTO(this.findStudentById(reqStudentDTO.getId()));
+
         // update student
         this.studentRepository.save(student);
 
         // update ClassEnrollment
-        this.classEnrollmentService.deleteClassEnrollment(student);
-
         List<Class> classes = new ArrayList<>();
         if (reqStudentDTO.getClasses() != null && !reqStudentDTO.getClasses().isEmpty()) {
             for (Class cl : reqStudentDTO.getClasses()) {
                 Class classDB = this.classService.handleFetchClassById(cl.getId());
                 if (classDB != null) {
-                    // save in ClassEnrollment table
-                    ClassEnrollment classEnrollment = new ClassEnrollment();
-                    classEnrollment.setEnrollmentStudent(student);
-                    classEnrollment.setEnrollmentClass(classDB);
-                    this.classEnrollmentService.handleCreateClassEnrollment(classEnrollment);
+                    if (!studentRealDTO.getClasses().contains(classDB)) {
+                        // save in ClassEnrollment table
+                        ClassEnrollment classEnrollment = new ClassEnrollment();
+                        classEnrollment.setEnrollmentStudent(student);
+                        classEnrollment.setEnrollmentClass(classDB);
+                        this.classEnrollmentService.handleCreateClassEnrollment(classEnrollment);
+                    }
 
-                    // save in list class of studentDTO
+                    // add to list class of studentDTO
                     classes.add(classDB);
                 }
             }
         }
-
         reqStudentDTO.setClasses(classes);
+
+        // delete existing class but not exist when update
+        List<Class> classesDelete = studentRealDTO.getClasses().stream()
+                .filter(c -> !reqStudentDTO.getClasses().contains(c))
+                .collect(Collectors.toList());
+        classesDelete.forEach(c -> classEnrollmentService.deleteClassEnrollment(c));
 
         return reqStudentDTO;
     }
