@@ -1,14 +1,16 @@
 package com.myproject.sm.service;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.myproject.sm.domain.Class;
 import com.myproject.sm.domain.Schedule;
-import com.myproject.sm.domain.dto.response.ResScheduleDTO;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO.Meta;
 import com.myproject.sm.repository.ScheduleRepository;
 
 @Service
@@ -39,91 +41,19 @@ public class ScheduleService {
         return scheduleOptional.isPresent() ? scheduleOptional.get() : null;
     }
 
-    public List<ResScheduleDTO> handleFetchScheduleInWeek(LocalDate startDate) {
-        // List<Schedule> schedules =
-        // this.scheduleRepository.findByDateInWeek(startDate.plusDays(6));
+    public ResultPaginationDTO handleFetchAllSchedule(Specification<Schedule> spec, Pageable pageable) {
+        Page<Schedule> pageSchedule = this.scheduleRepository.findAll(spec, pageable);
+        ResultPaginationDTO res = new ResultPaginationDTO();
+        Meta mt = new ResultPaginationDTO.Meta();
 
-        // ResScheduleDTO slot1 = new ResScheduleDTO();
-        // slot1.setSlot("Slot 1");
-        // slot1.setMonday(new ArrayList<>());
-        // slot1.setTuesday(new ArrayList<>());
-        // slot1.setWednesday(new ArrayList<>());
-        // slot1.setThursday(new ArrayList<>());
-        // slot1.setFriday(new ArrayList<>());
-        // slot1.setSaturday(new ArrayList<>());
-        // slot1.setSunday(new ArrayList<>());
+        mt.setPage(pageSchedule.getNumber() + 1);
+        mt.setPageSize(pageSchedule.getSize());
+        mt.setPages(pageSchedule.getTotalPages());
+        mt.setTotal(pageSchedule.getTotalElements());
+        res.setMeta(mt);
+        res.setResult(pageSchedule.getContent());
 
-        // ResScheduleDTO slot2 = new ResScheduleDTO();
-        // slot2.setSlot("Slot 2");
-        // slot2.setMonday(new ArrayList<>());
-        // slot2.setTuesday(new ArrayList<>());
-        // slot2.setWednesday(new ArrayList<>());
-        // slot2.setThursday(new ArrayList<>());
-        // slot2.setFriday(new ArrayList<>());
-        // slot2.setSaturday(new ArrayList<>());
-        // slot2.setSunday(new ArrayList<>());
-
-        // ResScheduleDTO slot3 = new ResScheduleDTO();
-        // slot3.setSlot("Slot 3");
-        // slot3.setMonday(new ArrayList<>());
-        // slot3.setTuesday(new ArrayList<>());
-        // slot3.setWednesday(new ArrayList<>());
-        // slot3.setThursday(new ArrayList<>());
-        // slot3.setFriday(new ArrayList<>());
-        // slot3.setSaturday(new ArrayList<>());
-        // slot3.setSunday(new ArrayList<>());
-
-        // // Phân loại các Schedule vào từng slot
-        // for (Schedule s : schedules) {
-        // ResScheduleDTO targetSlot = null;
-
-        // if (s.getSlotNumber() == 1) {
-        // targetSlot = slot1;
-        // } else if (s.getSlotNumber() == 2) {
-        // targetSlot = slot2;
-        // } else if (s.getSlotNumber() == 3) {
-        // targetSlot = slot3;
-        // }
-
-        // if (targetSlot != null) {
-        // // Nhóm các ngày trong tuần của slot
-        // for (int weekday : s.getWeekdayList()) {
-        // switch (weekday) {
-        // case 2:
-        // targetSlot.getMonday().add(s.getClassInfo());
-        // break;
-        // case 3:
-        // targetSlot.getTuesday().add(s.getClassInfo());
-        // break;
-        // case 4:
-
-        // targetSlot.getWednesday().add(s.getClassInfo());
-        // break;
-        // case 5:
-
-        // targetSlot.getThursday().add(s.getClassInfo());
-        // break;
-        // case 6:
-
-        // targetSlot.getFriday().add(s.getClassInfo());
-        // break;
-        // case 7:
-
-        // targetSlot.getSaturday().add(s.getClassInfo());
-        // break;
-        // case 1:
-
-        // targetSlot.getSunday().add(s.getClassInfo());
-        // break;
-        // default:
-        // break;
-        // }
-        // }
-        // }
-        // }
-
-        // return Arrays.asList(slot1, slot2, slot3);
-        return null;
+        return res;
     }
 
 }

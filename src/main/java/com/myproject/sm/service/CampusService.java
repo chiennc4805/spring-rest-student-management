@@ -27,7 +27,6 @@ public class CampusService {
     }
 
     public ResultPaginationDTO fetchAllCampus() {
-        // List<Campus> campus = this.campusRepository.findAll(spec);
         List<Campus> campus = this.campusRepository.findAll();
         ResultPaginationDTO res = new ResultPaginationDTO();
         Meta mt = new ResultPaginationDTO.Meta();

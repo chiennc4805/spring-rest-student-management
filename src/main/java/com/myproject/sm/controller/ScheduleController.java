@@ -1,8 +1,7 @@
 package com.myproject.sm.controller;
 
-import java.time.LocalDate;
-import java.util.List;
-
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,14 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.sm.domain.Schedule;
-import com.myproject.sm.domain.dto.response.ResScheduleDTO;
+import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.service.ClassService;
 import com.myproject.sm.service.ScheduleService;
 import com.myproject.sm.util.error.IdInvalidException;
+import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
 
@@ -49,9 +48,11 @@ public class ScheduleController {
     }
 
     @GetMapping("/schedule")
-    public ResponseEntity<List<ResScheduleDTO>> fetchScheduleInWeek(@RequestParam("startDate") LocalDate startDate) {
+    public ResponseEntity<ResultPaginationDTO> fetchAllSchedule(
+            @Filter Specification<Schedule> spec,
+            Pageable pageable) {
 
-        return ResponseEntity.ok(this.scheduleService.handleFetchScheduleInWeek(startDate));
+        return ResponseEntity.ok(this.scheduleService.handleFetchAllSchedule(spec, pageable));
     }
 
     @PutMapping("/schedule")

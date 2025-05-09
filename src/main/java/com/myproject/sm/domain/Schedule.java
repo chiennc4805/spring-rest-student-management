@@ -32,7 +32,9 @@ public class Schedule {
 
     @PreRemove
     public void handleBeforeDelete() {
-        this.classInfo.setSchedule(null);
+        if (classInfo != null) {
+            this.classInfo.setSchedule(null);
+        }
     }
 
 }
