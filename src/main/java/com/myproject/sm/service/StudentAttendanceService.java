@@ -2,6 +2,7 @@ package com.myproject.sm.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -10,7 +11,8 @@ import org.springframework.stereotype.Service;
 import com.myproject.sm.domain.Class;
 import com.myproject.sm.domain.Student;
 import com.myproject.sm.domain.StudentAttendance;
-import com.myproject.sm.domain.dto.request.ResStudentAttendance;
+import com.myproject.sm.domain.dto.request.ReqCreateStudentAttendance;
+import com.myproject.sm.domain.dto.request.ReqUpdateStudentAttendance;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO.Meta;
 import com.myproject.sm.repository.StudentAttendanceRepository;
@@ -30,7 +32,7 @@ public class StudentAttendanceService {
     }
 
     @Transactional
-    public List<StudentAttendance> handleCreateStudentAttendance(ResStudentAttendance resStudentAttendance) {
+    public List<StudentAttendance> handleCreateStudentAttendance(ReqCreateStudentAttendance resStudentAttendance) {
         if (resStudentAttendance.getClassInfo() != null) {
             Class classDB = this.classService.handleFetchClassById(resStudentAttendance.getClassInfo().getId());
             if (classDB != null) {
@@ -62,6 +64,24 @@ public class StudentAttendanceService {
         res.setResult(studentAttendances);
 
         return res;
+    }
+
+    public List<StudentAttendance> handleUpdateStudentAttendance(
+            List<ReqUpdateStudentAttendance> reqUpdateStudentAttendances) {
+        List<StudentAttendance> listUpdate = new ArrayList<>();
+        for (ReqUpdateStudentAttendance reqUpdate : reqUpdateStudentAttendances) {
+            Optional<StudentAttendance> saOptional = this.studentAttendanceRepository
+                    .findById(reqUpdate.getStudentAttendanceId());
+            if (saOptional.isPresent()) {
+                StudentAttendance sa = saOptional.get();
+                sa.setStatus(reqUpdate.isStatus());
+                listUpdate.add(sa);
+            }
+        }
+        if (!listUpdate.isEmpty()) {
+            return this.studentAttendanceRepository.saveAll(listUpdate);
+        }
+        return null;
     }
 
 }

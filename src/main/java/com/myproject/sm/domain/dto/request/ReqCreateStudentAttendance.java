@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ResStudentAttendance {
+public class ReqCreateStudentAttendance {
 
     private Class classInfo;
 
