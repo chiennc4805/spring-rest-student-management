@@ -18,8 +18,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "student_attendance")
-public class StudentAttendance {
+@Table(name = "teacher_attendance")
+public class TeacherAttendance {
+
     @Id
     @UuidGenerator
     private String id;
@@ -33,9 +34,9 @@ public class StudentAttendance {
     private boolean statusOfClass;
 
     @ManyToOne
-    @JoinColumn(name = "student_id")
+    @JoinColumn(name = "teacher_id")
     @JsonIncludeProperties({ "id", "name" })
-    private Student student;
+    private Teacher teacher;
 
     @ManyToOne
     @JoinColumn(name = "class_id")

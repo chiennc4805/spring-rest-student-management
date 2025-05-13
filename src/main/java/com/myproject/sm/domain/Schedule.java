@@ -4,8 +4,7 @@ import java.util.List;
 
 import org.hibernate.annotations.UuidGenerator;
 
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -23,11 +22,11 @@ public class Schedule {
     @UuidGenerator
     private String id;
 
+    @ElementCollection
     private List<Integer> weekdayList;
 
     @OneToOne
     @JoinColumn(name = "class_id")
-    @JsonIncludeProperties({ "id", "name" })
     private Class classInfo;
 
     @PreRemove

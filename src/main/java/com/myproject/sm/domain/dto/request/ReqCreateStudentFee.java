@@ -5,9 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ReqUpdateStudentAttendance {
+public class ReqCreateStudentFee {
 
-    private String attendanceId;
-
-    private boolean status;
+    private int month;
 }

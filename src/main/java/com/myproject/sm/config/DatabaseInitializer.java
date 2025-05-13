@@ -128,8 +128,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             permissions.add(new Permission("Create a schedule", "/schedule", "POST", "SCHEDULE"));
             permissions.add(new Permission("Update a schedule", "/schedule", "PUT", "SCHEDULE"));
             permissions.add(new Permission("Delete a schedule", "/schedule/{id}", "DELETE", "SCHEDULE"));
-            permissions.add(new Permission("Get a schedule by id", "/schedule/{id}", "GET", "SCHEDULE"));
-            permissions.add(new Permission("Get schedule with pagination", "/schedule", "GET", "SCHEDULE"));
+            permissions.add(new Permission("Get schedule ", "/schedule", "GET", "SCHEDULE"));
 
             // user
             permissions.add(new Permission("Create a user", "/users", "POST", "USER"));

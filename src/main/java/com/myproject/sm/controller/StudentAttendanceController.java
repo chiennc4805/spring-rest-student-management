@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.sm.domain.StudentAttendance;
-import com.myproject.sm.domain.dto.request.ReqCreateStudentAttendance;
+import com.myproject.sm.domain.dto.request.ReqCreateAttendance;
 import com.myproject.sm.domain.dto.request.ReqUpdateStudentAttendance;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.service.StudentAttendanceService;
@@ -29,7 +29,7 @@ public class StudentAttendanceController {
 
     @PostMapping("/student-attendance")
     public ResponseEntity<List<StudentAttendance>> createStudentAttendance(
-            @RequestBody ReqCreateStudentAttendance reqAttendance) {
+            @RequestBody ReqCreateAttendance reqAttendance) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(this.studentAttendanceService.handleCreateStudentAttendance(reqAttendance));

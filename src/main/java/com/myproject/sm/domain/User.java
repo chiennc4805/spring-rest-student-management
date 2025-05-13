@@ -4,6 +4,7 @@ import org.hibernate.annotations.UuidGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -35,11 +36,11 @@ public class User {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
     @JsonIgnoreProperties({ "user", "subjects" })
     private Teacher teacherInfo;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
     @JsonIgnoreProperties({ "user", "subjects" })
     private Parent parentInfo;
 

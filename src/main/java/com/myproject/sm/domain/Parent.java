@@ -44,7 +44,7 @@ public class Parent {
     @JsonIgnoreProperties("parent")
     private List<Student> students;
 
-    @OneToOne()
+    @OneToOne(orphanRemoval = true, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;

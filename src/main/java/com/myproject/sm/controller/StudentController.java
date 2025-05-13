@@ -1,5 +1,8 @@
 package com.myproject.sm.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -13,12 +16,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.sm.domain.Student;
+import com.myproject.sm.domain.User;
 import com.myproject.sm.domain.dto.StudentDTO;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.service.ParentService;
 import com.myproject.sm.service.StudentService;
+import com.myproject.sm.service.UserService;
+import com.myproject.sm.util.SecurityUtil;
 import com.myproject.sm.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
+import com.turkraft.springfilter.builder.FilterBuilder;
+import com.turkraft.springfilter.converter.FilterSpecificationConverter;
 
 import jakarta.validation.Valid;
 
@@ -27,10 +35,17 @@ public class StudentController {
 
     private final StudentService studentService;
     private final ParentService parentService;
+    private final FilterBuilder filterBuilder;
+    private final FilterSpecificationConverter filterSpecificationConverter;
+    private final UserService userService;
 
-    public StudentController(StudentService studentService, ParentService parentService) {
+    public StudentController(StudentService studentService, ParentService parentService, FilterBuilder filterBuilder,
+            FilterSpecificationConverter filterSpecificationConverter, UserService userService) {
         this.studentService = studentService;
         this.parentService = parentService;
+        this.filterBuilder = filterBuilder;
+        this.filterSpecificationConverter = filterSpecificationConverter;
+        this.userService = userService;
     }
 
     @PostMapping("/students")
@@ -49,7 +64,26 @@ public class StudentController {
             @Filter Specification<Student> spec,
             Pageable pageable) {
 
-        return ResponseEntity.ok(this.studentService.handleFetchAllStudents(spec, pageable));
+        Specification<Student> finalSpec = spec;
+        String username = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+        User currentUser = this.userService.handleGetUserByUsername(username);
+        if (currentUser != null && currentUser.getRole().getName().equals("PARENT")) {
+            List<String> studentIds = currentUser.getParentInfo().getStudents().stream().map(s -> s.getId())
+                    .collect(Collectors.toList());
+            if (!studentIds.isEmpty()) {
+                Specification<Student> studentInSpec = (root, query, criteriaBuilder) -> root.get("id").in(studentIds);
+
+                if (spec != null) {
+                    finalSpec = Specification.where(studentInSpec).and(spec);
+                } else {
+                    finalSpec = studentInSpec;
+                }
+            }
+        }
+
+        return ResponseEntity.ok(this.studentService.handleFetchAllStudents(finalSpec, pageable));
     }
 
     @GetMapping("/students/{id}")

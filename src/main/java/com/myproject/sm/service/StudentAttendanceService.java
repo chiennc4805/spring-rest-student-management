@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.myproject.sm.domain.Class;
 import com.myproject.sm.domain.Student;
 import com.myproject.sm.domain.StudentAttendance;
-import com.myproject.sm.domain.dto.request.ReqCreateStudentAttendance;
+import com.myproject.sm.domain.dto.request.ReqCreateAttendance;
 import com.myproject.sm.domain.dto.request.ReqUpdateStudentAttendance;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO;
 import com.myproject.sm.domain.dto.response.ResultPaginationDTO.Meta;
@@ -32,7 +32,7 @@ public class StudentAttendanceService {
     }
 
     @Transactional
-    public List<StudentAttendance> handleCreateStudentAttendance(ReqCreateStudentAttendance resStudentAttendance) {
+    public List<StudentAttendance> handleCreateStudentAttendance(ReqCreateAttendance resStudentAttendance) {
         if (resStudentAttendance.getClassInfo() != null) {
             Class classDB = this.classService.handleFetchClassById(resStudentAttendance.getClassInfo().getId());
             if (classDB != null) {
@@ -71,10 +71,11 @@ public class StudentAttendanceService {
         List<StudentAttendance> listUpdate = new ArrayList<>();
         for (ReqUpdateStudentAttendance reqUpdate : reqUpdateStudentAttendances) {
             Optional<StudentAttendance> saOptional = this.studentAttendanceRepository
-                    .findById(reqUpdate.getStudentAttendanceId());
+                    .findById(reqUpdate.getAttendanceId());
             if (saOptional.isPresent()) {
                 StudentAttendance sa = saOptional.get();
                 sa.setStatus(reqUpdate.isStatus());
+                sa.setStatusOfClass(true);
                 listUpdate.add(sa);
             }
         }
